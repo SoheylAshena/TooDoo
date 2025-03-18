@@ -1,100 +1,67 @@
 import { useSelector, useDispatch } from "react-redux";
+import { useState } from "react";
 import { deleteTasks, toggleTask } from "../context/Slices/tasksSlice";
+import FilterPanel from "./FilterPanel";
+import TaskList from "./TaskList";
+import EmptyTasksMessage from "./EmptyTasksMessage";
+import { BsFilter } from "react-icons/bs";
+import { useFilteredTasks } from "../hooks/filteredTasks";
 
 const MainBody = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
+  const filterOptions = useSelector((state) => state.filters);
+  const [showFilters, setShowFilters] = useState(false);
+
+  // Process filters and sorting
+
+  // Calculate filtered tasks without useEffect
+  const filteredTasks = useFilteredTasks();
+
+  // Extract unique categories for filter dropdown
+  const categories = ["all", ...new Set(tasks.map((task) => task.category))];
+
+  // Time-based categories
+  const timeCategories = [
+    { value: "all", label: "All Categories" },
+
+    ...categories
+      .filter((cat) => cat !== "all")
+      .map((cat) => ({ value: cat, label: cat })),
+  ];
 
   return (
     <div className="min-h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-8">
-      <h2 className="mb-8 text-3xl font-bold tracking-tight text-indigo-800">
-        Today&apos;s Tasks
-      </h2>
       <div className="mx-auto max-w-4xl">
-        {tasks.length === 0 ? (
-          <p className="text-center italic text-gray-500">
-            No tasks yet - enjoy your day! ✨
-          </p>
+        <div className="mb-8 flex items-center justify-between">
+          <h2 className="text-3xl font-bold tracking-tight text-indigo-800">
+            Tasks Manager
+          </h2>
+          <button
+            onClick={() => setShowFilters(!showFilters)}
+            className="flex items-center rounded-lg bg-indigo-100 px-4 py-2 text-sm font-medium text-indigo-700 hover:bg-indigo-200"
+          >
+            <BsFilter className="mr-2 text-lg" />
+            Filters & Sort
+          </button>
+        </div>
+
+        {showFilters && (
+          <FilterPanel
+            filterOptions={filterOptions}
+            timeCategories={timeCategories}
+          />
+        )}
+
+        {filteredTasks.length === 0 ? (
+          <EmptyTasksMessage filterOptions={filterOptions} />
         ) : (
-          <ul className="space-y-6">
-            {tasks.map((item) => (
-              <li
-                key={item.id}
-                className="rounded-xl border-l-4 border-indigo-500 bg-white p-6 shadow-lg transition-all duration-300 hover:shadow-xl"
-              >
-                <div className="flex items-start justify-between">
-                  <div className="flex flex-1 items-start space-x-4">
-                    <input
-                      type="checkbox"
-                      checked={item.completed}
-                      onChange={() => dispatch(toggleTask(item.id))}
-                      className="mt-1 h-5 w-5 rounded text-indigo-600 focus:ring-indigo-500"
-                    />
-                    <div className="flex-1">
-                      <h3
-                        className={`text-lg font-semibold ${
-                          item.completed
-                            ? "text-gray-400 line-through"
-                            : "text-gray-800"
-                        }`}
-                      >
-                        {item.text}
-                      </h3>
-                      <div className="mt-2 space-y-2">
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-indigo-600">
-                            Category:
-                          </span>
-                          <span className="text-sm text-gray-600">
-                            {item.category}
-                          </span>
-                        </div>
-                        <div className="flex flex-wrap items-center space-x-2">
-                          <span className="text-sm font-medium text-indigo-600">
-                            Tags:
-                          </span>
-                          {item.tags.map((tag) => (
-                            <span
-                              key={tag}
-                              className="mb-1 mr-2 inline-block rounded-full bg-indigo-100 px-2 py-1 text-xs text-indigo-800"
-                            >
-                              {tag}
-                            </span>
-                          ))}
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-indigo-600">
-                            Partners:
-                          </span>
-                          <span className="rounded bg-gray-100 px-2 py-1 text-sm text-gray-600">
-                            {item.partners || "None"}
-                          </span>
-                        </div>
-                        <div className="flex items-center space-x-2">
-                          <span className="text-sm font-medium text-indigo-600">
-                            Created:
-                          </span>
-                          <span className="text-sm text-gray-500">
-                            {new Date(item.date).toLocaleDateString("en-US", {
-                              month: "short",
-                              day: "numeric",
-                              year: "numeric",
-                            })}
-                          </span>
-                        </div>
-                      </div>
-                    </div>
-                  </div>
-                  <button
-                    onClick={() => dispatch(deleteTasks(item.id))}
-                    className="ml-4 flex-shrink-0 rounded-lg bg-red-500 px-4 py-2 text-white transition-colors duration-200 hover:bg-red-600"
-                  >
-                    Delete
-                  </button>
-                </div>
-              </li>
-            ))}
-          </ul>
+          <TaskList
+            filteredTasks={filteredTasks}
+            dispatch={dispatch}
+            toggleTask={toggleTask}
+            deleteTasks={deleteTasks}
+          />
         )}
       </div>
     </div>

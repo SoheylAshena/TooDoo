@@ -28,3 +28,6 @@
 .custom-scrollbar::-webkit-scrollbar-thumb:hover {
   background: #4169e1; /* Darker blue on hover */
 }
+.scrollbar-none::-webkit-scrollbar {
+  display: none;
+}
