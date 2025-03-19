@@ -8,17 +8,15 @@ import { setFilters } from "../../context/Slices/filtersSlice";
 const Category = ({ onClose }) => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
-  const filters = useSelector((state) => state.filters);
+
   const { openAddTaskModal } = useModal();
 
   // Get unique categories
-  const categories = [
-    ...new Set(tasks.map((task) => task.category.toLowerCase())),
-  ];
+  const categories = [...new Set(tasks.map((task) => task.category))];
 
   const getUniqueTags = (category) => {
     const allTags = tasks
-      .filter((task) => task.category.toLowerCase() === category)
+      .filter((task) => task.category === category)
       .reduce((tags, task) => {
         if (task.tags && Array.isArray(task.tags)) {
           return tags.concat(task.tags);
@@ -69,7 +67,7 @@ const Category = ({ onClose }) => {
                       partners: [],
                     }),
                   );
-                  console.log(filters);
+                  onClose();
                 }}
                 className="flex items-center text-lg font-semibold text-gray-800"
               >
@@ -77,22 +75,33 @@ const Category = ({ onClose }) => {
                   className="mr-2 h-2 w-2 rounded-full"
                   style={{ backgroundColor: stringToColor(cat) }}
                 ></span>
-                {cat.charAt(0).toUpperCase() + cat.slice(1)}
+                {cat}
               </h3>
               <ul className="flex flex-wrap gap-2">
                 {getUniqueTags(cat).map((tag) => (
                   <li
                     key={tag}
+                    style={{
+                      backgroundColor: stringToColor(tag),
+                    }}
                     className="rounded-full bg-gray-50 px-3.5 py-1.5 backdrop-blur-sm transition-colors duration-200 hover:bg-gray-100"
+                    onClick={() => {
+                      dispatch(
+                        setFilters({
+                          category: cat,
+                          status: "all",
+                          search: "",
+                          priority: "all",
+                          sort: "date-desc",
+                          time: "all",
+                          tags: [tag],
+                          partners: [],
+                        }),
+                      );
+                      onClose();
+                    }}
                   >
-                    <span
-                      className="text-sm font-bold"
-                      style={{
-                        color: stringToColor(tag),
-                      }}
-                    >
-                      #{tag}
-                    </span>
+                    <span className="text-sm font-bold text-white">#{tag}</span>
                   </li>
                 ))}
               </ul>
@@ -112,11 +121,16 @@ const Category = ({ onClose }) => {
 };
 
 Category.propTypes = {
+
+
+  
   onClose: PropTypes.func,
 };
+
+
+
 
 Category.defaultProps = {
   onClose: () => {},
 };
-
 export default Category;

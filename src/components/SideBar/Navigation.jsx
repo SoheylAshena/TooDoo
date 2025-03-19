@@ -99,6 +99,7 @@ const Navigation = ({ onClose }) => {
     completed: tasks.filter((task) => task.completed).length,
     high: tasks.filter((task) => task.priority?.toLowerCase() === "high")
       .length,
+    active: tasks.filter((task) => !task.completed).length,
     recent: tasks.filter((task) => {
       const createdDate = new Date(task.createdAt || task.date);
       const oneWeekAgo = new Date();
@@ -119,6 +120,7 @@ const Navigation = ({ onClose }) => {
           time: "all",
           tags: [],
           partners: [],
+          sort: filters.sort || "date-desc",
         };
       case "completed":
         return {
@@ -129,6 +131,7 @@ const Navigation = ({ onClose }) => {
           time: "all",
           tags: [],
           partners: [],
+          sort: filters.sort || "date-desc",
         };
       case "high":
         return {
@@ -139,6 +142,7 @@ const Navigation = ({ onClose }) => {
           time: "all",
           tags: [],
           partners: [],
+          sort: filters.sort || "date-desc",
         };
       case "today":
         return {
@@ -149,6 +153,7 @@ const Navigation = ({ onClose }) => {
           time: "today",
           tags: [],
           partners: [],
+          sort: filters.sort || "date-desc",
         };
       case "upcoming":
         return {
@@ -159,6 +164,7 @@ const Navigation = ({ onClose }) => {
           time: "upcoming",
           tags: [],
           partners: [],
+          sort: filters.sort || "date-desc",
         };
       case "recent":
         return {
@@ -169,6 +175,18 @@ const Navigation = ({ onClose }) => {
           time: "recent",
           tags: [],
           partners: [],
+          sort: filters.sort || "date-desc",
+        };
+      case "active":
+        return {
+          category: "all",
+          status: "active",
+          search: "",
+          priority: "all",
+          time: "all",
+          tags: [],
+          partners: [],
+          sort: filters.sort || "date-desc",
         };
       case "filters":
         return filters; // Keep current filters when visiting filters page
@@ -185,6 +203,7 @@ const Navigation = ({ onClose }) => {
           time: "all",
           tags: [],
           partners: [],
+          sort: filters.sort || "date-desc",
         };
     }
   };
@@ -200,8 +219,9 @@ const Navigation = ({ onClose }) => {
       filters.status === config.status &&
       filters.priority === config.priority &&
       filters.time === config.time &&
-      filters.tags === config.tags &&
-      filters.partners === config.partners &&
+      JSON.stringify(filters.tags) === JSON.stringify(config.tags) &&
+      JSON.stringify(filters.partners) === JSON.stringify(config.partners) &&
+      filters.sort === config.sort &&
       (!filters.search || configName === activeItem)
     );
   };
@@ -219,9 +239,13 @@ const Navigation = ({ onClose }) => {
       setActiveItem("upcoming");
     } else if (matchesConfig("recent")) {
       setActiveItem("recent");
+    } else if (matchesConfig("active")) {
+      setActiveItem("active");
+    } else {
+      setActiveItem("");
     }
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters]);
+  }, [filters, activeItem]);
 
   const handleItemClick = (item) => {
     // Update filters based on the navigation item
@@ -304,6 +328,13 @@ const Navigation = ({ onClose }) => {
           count={taskCounts.high}
           active={activeItem === "high"}
           onClick={() => handleItemClick("high")}
+        />
+        <NavItem
+          icon={<FaExclamationCircle size={16} />}
+          text="Active"
+          count={taskCounts.active}
+          active={activeItem === "active"}
+          onClick={() => handleItemClick("active")}
         />
       </NavigationSection>
 

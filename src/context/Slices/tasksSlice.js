@@ -32,32 +32,47 @@ const getDefaultTasks = () => [
   {
     id: nanoid(),
     text: "Test Task #1",
-    category: "personal",
+    category: "Personal",
     tags: ["State", "React", "Redux"],
     partners: ["Soheyl"],
     completed: false,
-    date: new Date().toISOString(),
+    date: new Date(
+      new Date().setMonth(new Date().getMonth() + 1),
+    ).toISOString(),
     priority: "High",
+    createdAt: new Date(
+      new Date().setMonth(new Date().getMonth() - 3),
+    ).toISOString(),
   },
   {
     id: nanoid(),
     text: "Test Task #2",
-    category: "team",
+    category: "Team",
     tags: ["Greet", "Intract", "Help"],
     partners: ["Ali"],
     completed: false,
-    date: new Date().toISOString(),
+    date: new Date(
+      new Date().setMonth(new Date().getMonth() + 2),
+    ).toISOString(),
     priority: "Medium",
+    createdAt: new Date(
+      new Date().setMonth(new Date().getMonth() - 2),
+    ).toISOString(),
   },
   {
     id: nanoid(),
     text: "Test Task #3",
-    category: "company",
+    category: "Company",
     tags: ["Meeting", "Project", "Lunch"],
     partners: ["Narges"],
     completed: true,
-    date: new Date().toISOString(),
+    date: new Date(
+      new Date().setMonth(new Date().getMonth() + 3),
+    ).toISOString(),
     priority: "Low",
+    createdAt: new Date(
+      new Date().setMonth(new Date().getMonth() - 1),
+    ).toISOString(),
   },
 ];
 
@@ -84,6 +99,7 @@ export const tasksSlice = createSlice({
         completed: false,
         date: new Date(action.payload.date).toISOString(),
         priority: action.payload.priority || "Medium",
+        createdAt: new Date().toISOString(),
       };
       state.push(newTask);
       saveTasks(state);
@@ -123,13 +139,7 @@ export const tasksSlice = createSlice({
   },
 });
 
-export const {
-  addTasks,
-  deleteTasks,
-  toggleTask,
-  updateTask,
-  reorderTasks,
-  setTaskPriority,
-} = tasksSlice.actions;
+export const { addTasks, deleteTasks, toggleTask, updateTask } =
+  tasksSlice.actions;
 
 export default tasksSlice.reducer;

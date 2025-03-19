@@ -15,36 +15,10 @@ export const useFilteredTasks = () => {
 
   // Apply category filter
   if (filterOptions.category !== "all") {
-    if (filterOptions.category === "today") {
-      // Today's tasks
-      result = result.filter((task) => {
-        const taskDate = new Date(task.date);
-        const today = new Date();
-        return taskDate.toDateString() === today.toDateString();
-      });
-    } else if (filterOptions.category === "upcoming") {
-      // Upcoming tasks (future dates except today)
-      result = result.filter((task) => {
-        const taskDate = new Date(task.date);
-        const today = new Date();
-        return (
-          taskDate > today && taskDate.toDateString() !== today.toDateString()
-        );
-      });
-    } else if (filterOptions.category === "recent") {
-      // Recently added tasks (within last 7 days)
-      result = result.filter((task) => {
-        const createdDate = new Date(task.createdAt || task.date);
-        const oneWeekAgo = new Date();
-        oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        return createdDate >= oneWeekAgo;
-      });
-    } else {
-      // Standard category filtering by name
-      result = result.filter(
-        (task) => task.category === filterOptions.category,
-      );
-    }
+    result = result.filter(
+      (task) =>
+        task.category.toLowerCase() === filterOptions.category.toLowerCase(),
+    );
   }
 
   // Apply priority filter
@@ -69,20 +43,19 @@ export const useFilteredTasks = () => {
 
   // Apply time filter
   if (filterOptions.time !== "all") {
+    const today = new Date();
+    const todayStr = today.toDateString();
+
     result = result.filter((task) => {
-      const taskDate = new Date(task.date);
-      const today = new Date();
       if (filterOptions.time === "today") {
-        return taskDate.toDateString() === today.toDateString();
+        return new Date(task.date).toDateString() === todayStr;
       } else if (filterOptions.time === "upcoming") {
-        return (
-          taskDate > today && taskDate.toDateString() !== today.toDateString()
-        );
+        const taskDate = new Date(task.date);
+        return taskDate > today && taskDate.toDateString() !== todayStr;
       } else if (filterOptions.time === "recent") {
-        const createdDate = new Date(task.createdAt || task.date);
         const oneWeekAgo = new Date();
         oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
-        return createdDate >= oneWeekAgo;
+        return new Date(task.createdAt || task.date) >= oneWeekAgo;
       }
       return true;
     });
@@ -105,9 +78,9 @@ export const useFilteredTasks = () => {
   }
   // Apply sorting
   if (filterOptions.sort === "date-desc") {
-    result.sort((a, b) => new Date(b.date) - new Date(a.date));
+    result.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   } else if (filterOptions.sort === "date-asc") {
-    result.sort((a, b) => new Date(a.date) - new Date(b.date));
+    result.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   } else if (filterOptions.sort === "priority") {
     const priorityOrder = { high: 0, medium: 1, low: 2 };
     result.sort((a, b) => {

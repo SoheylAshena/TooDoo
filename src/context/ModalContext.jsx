@@ -1,6 +1,6 @@
 import { createContext, useState, useContext } from "react";
 import PropTypes from "prop-types";
-import AddTaskForm from "../components/SideBar/AddTaskForm";
+import AddForm from "../components/AddForm";
 
 // Create context
 const ModalContext = createContext();
@@ -21,7 +21,7 @@ export const ModalProvider = ({ children }) => {
     >
       {children}
 
-      {isAddTaskModalOpen && <AddTaskForm onClose={closeAddTaskModal} />}
+      {isAddTaskModalOpen && <AddForm onClose={closeAddTaskModal} />}
     </ModalContext.Provider>
   );
 };

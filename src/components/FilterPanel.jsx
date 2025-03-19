@@ -149,8 +149,7 @@ const FilterPanel = ({ filterOptions, timeCategories }) => {
                       setCategoryOpen(false);
                     }}
                   >
-                    {category.label.charAt(0).toUpperCase() +
-                      category.label.slice(1)}
+                    {category.label}
                   </div>
                 ))}
               </div>

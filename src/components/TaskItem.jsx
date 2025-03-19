@@ -6,6 +6,7 @@ import {
 } from "react-icons/md";
 import { AiOutlineClockCircle } from "react-icons/ai";
 import PropTypes from "prop-types";
+import clsx from "clsx";
 
 const TaskItem = ({ task, dispatch, toggleTask, deleteTasks }) => {
   // Get priority badge styling
@@ -14,21 +15,21 @@ const TaskItem = ({ task, dispatch, toggleTask, deleteTasks }) => {
 
     if (lowerPriority === "high") {
       return (
-        <span className="flex items-center rounded-full bg-red-100 px-2 py-1 text-xs text-red-800">
+        <span className="flex items-center rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-800">
           <MdOutlinePriorityHigh className="mr-1" />
           High
         </span>
       );
     } else if (lowerPriority === "low") {
       return (
-        <span className="flex items-center rounded-full bg-green-100 px-2 py-1 text-xs text-green-800">
+        <span className="flex items-center rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800">
           <MdOutlineLowPriority className="mr-1" />
           Low
         </span>
       );
     } else {
       return (
-        <span className="flex items-center rounded-full bg-yellow-100 px-2 py-1 text-xs text-yellow-800">
+        <span className="flex items-center rounded-full bg-yellow-100 px-2.5 py-1 text-xs font-medium text-yellow-800">
           <MdOutlinePriorityHigh className="mr-1" />
           Medium
         </span>
@@ -50,40 +51,46 @@ const TaskItem = ({ task, dispatch, toggleTask, deleteTasks }) => {
     <li
       className={`rounded-xl ${
         task.completed ? "bg-gray-50" : "bg-white"
-      } p-4 shadow-sm transition-all duration-200 hover:translate-y-[-2px] hover:shadow-md`}
+      } border border-gray-100 p-4 shadow-md transition-all duration-300 hover:translate-y-[-3px] hover:shadow-lg`}
     >
       <div className="flex items-start gap-3">
-        <input
-          type="checkbox"
-          checked={task.completed}
-          onChange={() => dispatch(toggleTask(task.id))}
-          className="mt-1 h-4 w-4 rounded-full border-gray-300 text-indigo-600 focus:ring-indigo-500"
-        />
-        <div className="flex-1">
+        <div className="pt-1">
+          <input
+            type="checkbox"
+            checked={task.completed}
+            onChange={() => dispatch(toggleTask(task.id))}
+            className="h-4.5 w-4.5 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-1"
+          />
+        </div>
+
+        <div className="min-w-0 flex-1 overflow-hidden">
           <div className="flex flex-wrap items-center gap-2">
             <h3
-              className={`text-base font-medium ${
-                task.completed ? "text-gray-400 line-through" : "text-gray-800"
-              }`}
+              className={clsx(
+                "overflow-wrap-anywhere w-full text-base leading-normal font-medium break-words whitespace-normal",
+                task.completed ? "text-gray-400 line-through" : "text-gray-800",
+              )}
             >
               {task.text}
             </h3>
-            {getPriorityBadge(task.priority)}
+            <div className="flex-shrink-0">
+              {getPriorityBadge(task.priority)}
+            </div>
           </div>
 
-          <div className="mt-1.5">
-            <div className="flex flex-wrap items-center gap-2 text-xs text-gray-500">
-              <span className="font-medium text-indigo-500">
+          <div className="mt-2">
+            <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-500">
+              <span className="rounded-md bg-indigo-50 px-2 py-0.5 font-medium text-indigo-600">
                 {task.category}
               </span>
-              <span className="flex items-center">
+              <span className="flex items-center rounded-md bg-gray-50 px-2 py-0.5">
                 <AiOutlineClockCircle className="mr-1" />
                 {formatDate(task.date)}
               </span>
             </div>
 
             {(task.tags.length > 0 || task.partners) && (
-              <div className="mt-1.5 flex flex-wrap items-center gap-1.5">
+              <div className="mt-2 flex flex-wrap items-center gap-1.5">
                 {task.tags.map((tag) => (
                   <span
                     key={tag}
@@ -107,19 +114,19 @@ const TaskItem = ({ task, dispatch, toggleTask, deleteTasks }) => {
           </div>
         </div>
 
-        <div className="flex">
+        <div className="ml-1 flex flex-shrink-0 self-start">
           <button
             onClick={() => {
               /* Add edit functionality here */
             }}
-            className="ml-2 rounded-full p-1.5 text-gray-400 transition-colors duration-200 hover:bg-indigo-50 hover:text-indigo-500"
+            className="rounded-full p-1.5 text-gray-400 transition-colors duration-200 hover:bg-indigo-50 hover:text-indigo-500"
             aria-label="Edit task"
           >
             <MdEdit size={18} />
           </button>
           <button
             onClick={() => dispatch(deleteTasks(task.id))}
-            className="ml-2 rounded-full p-1.5 text-gray-400 transition-colors duration-200 hover:bg-red-50 hover:text-red-500"
+            className="ml-1 rounded-full p-1.5 text-gray-400 transition-colors duration-200 hover:bg-red-50 hover:text-red-500"
             aria-label="Delete task"
           >
             <MdDelete size={18} />
