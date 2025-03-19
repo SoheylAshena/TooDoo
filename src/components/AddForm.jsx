@@ -1,7 +1,6 @@
-import { useState, useRef, useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useState, useRef } from "react";
+import { useDispatch, useSelector } from "react-redux";
 import { addTasks } from "../context/Slices/tasksSlice";
-import { motion } from "framer-motion";
 import PropTypes from "prop-types";
 
 const CustomDropdown = ({
@@ -15,17 +14,6 @@ const CustomDropdown = ({
   const [isOpen, setIsOpen] = useState(false);
   const [searchTerm, setSearchTerm] = useState("");
   const dropdownRef = useRef(null);
-
-  useEffect(() => {
-    const handleClickOutside = (event) => {
-      if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-        setIsOpen(false);
-      }
-    };
-
-    document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
-  }, []);
 
   const filteredOptions = options.filter((option) =>
     option.toLowerCase().includes(searchTerm.toLowerCase()),
@@ -59,34 +47,39 @@ const CustomDropdown = ({
         </button>
 
         {isOpen && (
-          <div className="ring-opacity-5 absolute z-10 mt-1 w-full rounded-lg bg-white shadow-lg ring-1 ring-black">
-            <div className="p-2">
-              <input
-                type="text"
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none"
-                placeholder="Search..."
-              />
-            </div>
+          <div className="ring-opacity-5 absolute z-10 mt-1 w-full rounded-lg bg-white shadow-lg">
+            {label === "Category" && (
+              <div className="p-2">
+                <input
+                  type="text"
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none"
+                  placeholder="Add a category..."
+                />
+              </div>
+            )}
             <ul className="max-h-60 overflow-auto py-1 text-base">
               {filteredOptions.map((option) => (
                 <li
                   key={option}
                   className="cursor-pointer px-4 py-2 text-gray-700 hover:bg-blue-50"
                   onClick={() => {
-                    onChange({ target: { name: "category", value } });
+                    onChange({
+                      target: { name: label.toLowerCase(), value: option },
+                    });
                     setIsOpen(false);
                   }}
                 >
                   {option}
                 </li>
               ))}
-              {onAddNew && (
+              {onAddNew && searchTerm && (
                 <li
                   className="cursor-pointer border-t border-gray-100 px-4 py-2 text-blue-600 hover:bg-blue-50"
                   onClick={() => {
                     onAddNew(searchTerm);
+                    setSearchTerm("");
                     setIsOpen(false);
                   }}
                 >
@@ -128,11 +121,13 @@ const AddForm = ({ onClose }) => {
   });
 
   const [tagInput, setTagInput] = useState("");
-  const [partnerInput, setPartnerInput] = useState("");
+  const [partnerInput, setPartnerInput] = useState([]);
   const [customCategories, setCustomCategories] = useState([]);
   const [errors, setErrors] = useState({});
 
-  const defaultCategories = ["Personal", "Team", "Company"];
+  const defaultCategories = [
+    ...new Set(useSelector((state) => state.tasks.map((cat) => cat.category))),
+  ];
   const categories = [...defaultCategories, ...customCategories];
   const priorities = ["Low", "Medium", "High"];
 
@@ -216,12 +211,7 @@ const AddForm = ({ onClose }) => {
 
   return (
     <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <motion.div
-        initial={{ opacity: 0, y: 20 }}
-        animate={{ opacity: 1, y: 0 }}
-        transition={{ duration: 0.5 }}
-        className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white p-8 shadow-xl"
-      >
+      <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white p-8 shadow-xl">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-700">Create New Task</h2>
           <button
@@ -315,7 +305,7 @@ const AddForm = ({ onClose }) => {
                 type="text"
                 value={tagInput}
                 onChange={(e) => setTagInput(e.target.value)}
-                onKeyPress={(e) =>
+                onKeyDown={(e) =>
                   e.key === "Enter" && (e.preventDefault(), handleAddTag())
                 }
                 className="flex-grow rounded-l-lg border border-gray-200 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none"
@@ -358,7 +348,7 @@ const AddForm = ({ onClose }) => {
                 type="text"
                 value={partnerInput}
                 onChange={(e) => setPartnerInput(e.target.value)}
-                onKeyPress={(e) =>
+                onKeyDown={(e) =>
                   e.key === "Enter" && (e.preventDefault(), handleAddPartner())
                 }
                 className="flex-grow rounded-l-lg border border-gray-200 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none"
@@ -393,26 +383,22 @@ const AddForm = ({ onClose }) => {
           </div>
 
           <div className="flex gap-4 pt-4">
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            <button
               type="submit"
-              className="flex-1 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-medium text-white shadow-md transition-all hover:shadow-lg focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 focus:outline-none"
+              className="flex-1 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-medium text-white shadow-md transition-all hover:from-blue-600 hover:to-purple-600 hover:shadow-lg focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 focus:outline-none"
             >
               Create Task
-            </motion.button>
-            <motion.button
-              whileHover={{ scale: 1.02 }}
-              whileTap={{ scale: 0.98 }}
+            </button>
+            <button
               type="button"
               onClick={onClose}
               className="flex-1 rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-700 shadow-md transition-all hover:bg-gray-200 hover:shadow-lg focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:outline-none"
             >
               Cancel
-            </motion.button>
+            </button>
           </div>
         </form>
-      </motion.div>
+      </div>
     </div>
   );
 };

@@ -10,6 +10,7 @@ import {
   FaExclamationCircle,
   FaInbox,
   FaChartBar,
+  FaRegCircle,
 } from "react-icons/fa";
 import { BsClockHistory } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
@@ -20,7 +21,7 @@ import clsx from "clsx";
 const NavigationSection = ({ title, children }) => (
   <div className="mb-4">
     {title && (
-      <h3 className="mb-2 px-3 text-xs font-semibold uppercase text-gray-500">
+      <h3 className="mb-2 px-3 text-xs font-semibold text-gray-500 uppercase">
         {title}
       </h3>
     )}
@@ -330,7 +331,7 @@ const Navigation = ({ onClose }) => {
           onClick={() => handleItemClick("high")}
         />
         <NavItem
-          icon={<FaExclamationCircle size={16} />}
+          icon={<FaRegCircle size={16} />}
           text="Active"
           count={taskCounts.active}
           active={activeItem === "active"}

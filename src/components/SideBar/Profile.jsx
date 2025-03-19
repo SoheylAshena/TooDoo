@@ -16,10 +16,9 @@ const Profile = () => {
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
           <div className="relative">
-            <img
-              src="/Me (1).jpg"
-              alt="Profile picture"
-              className="h-10 w-10 rounded-full border-2 border-indigo-500 object-cover shadow-md"
+            <FiUser
+              size={40}
+              className="rounded-full border-2 border-indigo-500 object-cover text-indigo-500 shadow-md"
             />
           </div>
           <div>
@@ -61,7 +60,7 @@ const Profile = () => {
 
       {/* User menu dropdown */}
       {showMenu && (
-        <div className="absolute right-0 top-10 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200">
+        <div className="absolute top-10 right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200">
           <div className="border-b border-gray-100 px-4 py-2">
             <p className="text-xs font-medium text-gray-500">Signed in as</p>
             <p className="text-sm font-semibold text-gray-800">Soheyl Ashena</p>
