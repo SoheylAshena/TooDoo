@@ -1,86 +1,54 @@
-import { useState, useEffect } from "react";
+import { useRef } from "react";
 import Profile from "./Profile";
 import Navigation from "./Navigation";
 import Category from "./Category";
 import { HiMenuAlt2 } from "react-icons/hi";
-import clsx from "clsx";
 import { IoMdClose } from "react-icons/io";
+import clsx from "clsx";
 
 const SideBar = () => {
-  const [showSidebar, setShowSidebar] = useState(true);
-  const [isMobile, setIsMobile] = useState(false);
+  const sidebarRef = useRef(null);
 
-  // Handle responsive layout
-  useEffect(() => {
-    const handleResize = () => {
-      if (window.innerWidth < 768) {
-        setIsMobile(true);
-        setShowSidebar(false);
-      } else {
-        setIsMobile(false);
-        setShowSidebar(true);
-      }
-    };
-
-    // Set initial state
-    handleResize();
-
-    // Add event listener
-    window.addEventListener("resize", handleResize);
-
-    // Clean up
-    return () => window.removeEventListener("resize", handleResize);
-  }, []);
-
-  const handleClose = () => {
-    if (isMobile) {
-      setShowSidebar(false);
+  // Use useCallback to ensure the function is stable across renders.
+  const toggleSidebar = () => {
+    const sidebar = sidebarRef.current;
+    if (sidebar) {
+      sidebar.classList.toggle("-translate-x-full");
     }
   };
 
   return (
     <>
-      {/* Mobile menu button */}
-      {isMobile && (
-        <button
-          onClick={() => setShowSidebar(!showSidebar)}
-          className={clsx(
-            "fixed left-4 top-4 z-20 rounded-full bg-white p-2.5 shadow-lg hover:bg-gray-50",
-            showSidebar && "none",
-          )}
-          aria-label="Toggle menu"
-        >
-          <HiMenuAlt2 className="text-2xl text-indigo-600" />
-        </button>
-      )}
-
-      {/* Sidebar with overlay for mobile */}
-      <div
-        onClick={(e) => {
-          if (e.target === e.currentTarget) {
-            handleClose();
-          }
-        }}
+      {/* Mobile button */}
+      <button
+        onClick={toggleSidebar}
         className={clsx(
-          showSidebar ? "translate-x-0" : "-translate-x-full",
-          "fixed z-40 flex h-full w-80 transform flex-col gap-4 overflow-y-auto bg-white p-5 shadow-xl transition-transform duration-300 ease-in-out md:relative md:w-96 md:translate-x-0",
+          "fixed top-4 left-4 z-20 rounded-full bg-white p-2.5 shadow-lg hover:bg-gray-50 dark:bg-gray-900",
+          "md:hidden", // Hidden on medium and larger screens
         )}
+        aria-label="Toggle menu"
       >
-        {/* Actual sidebar */}
-        {isMobile && (
-          <div className="mb-2 flex justify-end">
-            <button
-              onClick={handleClose}
-              className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100"
-              aria-label="Close sidebar"
-            >
-              <IoMdClose className="text-2xl text-gray-500 hover:text-gray-700" />
-            </button>
-          </div>
-        )}
+        <HiMenuAlt2 className="text-2xl text-indigo-600 dark:text-indigo-400" />
+      </button>
+
+      {/* Sidebar */}
+      <div
+        ref={sidebarRef}
+        className="fixed z-40 flex h-full w-80 -translate-x-full transform flex-col gap-4 overflow-y-auto bg-white p-5 shadow-xl transition-transform duration-300 ease-in-out md:relative md:w-96 md:translate-x-0 dark:bg-gray-900"
+      >
+        {/* Close button Mobile */}
+        <div className="mb-2 flex justify-end md:hidden">
+          <button
+            onClick={toggleSidebar}
+            className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100"
+            aria-label="Close sidebar"
+          >
+            <IoMdClose className="text-2xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" />
+          </button>
+        </div>
         <Profile />
-        <Navigation onClose={handleClose} />
-        <Category onClose={handleClose} />
+        <Navigation onClose={toggleSidebar} />
+        <Category onClose={toggleSidebar} />
       </div>
     </>
   );

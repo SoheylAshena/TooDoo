@@ -206,6 +206,7 @@ const AddForm = ({ onClose }) => {
       });
       setTagInput("");
       setPartnerInput("");
+      onClose();
     }
   };
 

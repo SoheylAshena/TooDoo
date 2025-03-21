@@ -18,21 +18,26 @@ const Profile = () => {
           <div className="relative">
             <FiUser
               size={40}
-              className="rounded-full border-2 border-indigo-500 object-cover text-indigo-500 shadow-md"
+              className="rounded-full border-2 border-indigo-500 object-cover text-indigo-500 shadow-md dark:border-indigo-400 dark:text-indigo-400"
             />
           </div>
           <div>
-            <h2 className="text-base font-semibold text-gray-800">
+            <h2 className="text-base font-semibold text-gray-800 dark:text-gray-200">
               Soheyl Ashena
             </h2>
-            <p className="text-xs text-gray-500">Front-End Developer</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400">
+              Front-End Developer
+            </p>
           </div>
         </div>
 
         <div className="flex items-center gap-1">
           <button
-            onClick={() => setIsDarkMode(!isDarkMode)}
-            className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+            onClick={() => {
+              document.documentElement.classList.toggle("dark");
+              setIsDarkMode(!isDarkMode);
+            }}
+            className="rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
           >
             {isDarkMode ? (
               <MdOutlineLightMode size={20} />
@@ -42,7 +47,7 @@ const Profile = () => {
           </button>
 
           <button
-            className="relative rounded-full p-2 text-gray-500 hover:bg-gray-100"
+            className="relative rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             aria-label="Notifications"
           >
             <IoMdNotificationsOutline size={20} />
@@ -50,7 +55,7 @@ const Profile = () => {
 
           <button
             onClick={toggleMenu}
-            className="rounded-full p-2 text-gray-500 hover:bg-gray-100"
+            className="rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
             aria-label="User menu"
           >
             <FiUser size={20} />
@@ -60,27 +65,31 @@ const Profile = () => {
 
       {/* User menu dropdown */}
       {showMenu && (
-        <div className="absolute top-10 right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200">
+        <div className="absolute top-10 right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200 dark:bg-gray-900">
           <div className="border-b border-gray-100 px-4 py-2">
-            <p className="text-xs font-medium text-gray-500">Signed in as</p>
-            <p className="text-sm font-semibold text-gray-800">Soheyl Ashena</p>
+            <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
+              Signed in as
+            </p>
+            <p className="text-sm font-semibold text-gray-800 dark:text-gray-200">
+              Soheyl Ashena
+            </p>
           </div>
           <button
             onClick={toggleMenu}
-            className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+            className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
           >
             Your Profile
           </button>
           <button
             onClick={toggleMenu}
-            className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50"
+            className="flex w-full items-center px-4 py-2 text-left text-sm text-gray-700 hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800"
           >
             Settings
           </button>
           <div className="border-t border-gray-100">
             <button
               onClick={toggleMenu}
-              className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50"
+              className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900"
             >
               <FiLogOut size={16} />
               Sign out
@@ -90,11 +99,13 @@ const Profile = () => {
       )}
 
       {/* App name & version */}
-      <div className="mt-4 flex items-center justify-between border-b border-gray-200 pb-4">
+      <div className="mt-4 flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
         <div>
-          <h1 className="text-xl font-bold text-indigo-700">TooDoo</h1>
+          <h1 className="text-xl font-bold text-indigo-700 dark:text-indigo-300">
+            TooDoo
+          </h1>
         </div>
-        <div className="rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700">
+        <div className="rounded-full bg-indigo-100 px-2 py-1 text-xs font-medium text-indigo-700 dark:bg-indigo-900 dark:text-indigo-300">
           Pro
         </div>
       </div>

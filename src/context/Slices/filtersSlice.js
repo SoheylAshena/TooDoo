@@ -1,12 +1,11 @@
 import { createSlice } from "@reduxjs/toolkit";
-
 const initialState = {
-  status: "all", // all, active, completed
-  category: "all", // all, today, upcoming, recent
+  status: "all",
+  category: "all",
   search: "",
-  priority: "all", // all, low, medium, high
-  sort: "date-desc", // date-asc, date-desc, priority-asc, priority-desc
-  time: "all", // all, today, upcoming, recent
+  priority: "all",
+  sort: "date-desc",
+  time: "all",
   tags: [],
   partners: [],
 };
@@ -16,7 +15,6 @@ export const filtersSlice = createSlice({
   initialState,
   reducers: {
     setFilters: (state, action) => {
-      // For each filter property, only update if it's defined in the payload
       if (action.payload.status !== undefined) {
         state.status = action.payload.status;
       }
@@ -42,6 +40,7 @@ export const filtersSlice = createSlice({
         state.partners = action.payload.partners;
       }
     },
+
     resetFilters: (state) => {
       state.status = initialState.status;
       state.category = initialState.category;

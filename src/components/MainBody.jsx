@@ -13,8 +13,9 @@ const MainBody = () => {
   const filterOptions = useSelector((state) => state.filters);
   const [showFilters, setShowFilters] = useState(false);
 
-  // Process filters and sorting
+  console.log("Current active nav item:");
 
+  // Process filters and sorting
   // Calculate filtered tasks without useEffect
   const filteredTasks = useFilteredTasks();
 
@@ -24,7 +25,6 @@ const MainBody = () => {
   // Time-based categories
   const timeCategories = [
     { value: "all", label: "All Categories" },
-
     ...categories
       .filter((cat) => cat !== "all")
       .map((cat) => ({ value: cat, label: cat })),

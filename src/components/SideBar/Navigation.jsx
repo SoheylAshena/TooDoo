@@ -1,4 +1,3 @@
-import { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSelector, useDispatch } from "react-redux";
 import {
@@ -14,9 +13,9 @@ import {
 } from "react-icons/fa";
 import { BsClockHistory } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
-import { useModal } from "../../context/ModalContext";
 import { setFilters } from "../../context/Slices/filtersSlice";
 import clsx from "clsx";
+import { getFilterConfig } from "../../Utilities/filterUtils";
 
 const NavigationSection = ({ title, children }) => (
   <div className="mb-4">
@@ -76,8 +75,6 @@ NavItem.propTypes = {
 };
 
 const Navigation = ({ onClose }) => {
-  const [activeItem, setActiveItem] = useState("all");
-  const { openAddTaskModal } = useModal();
   const dispatch = useDispatch();
   const filters = useSelector((state) => state.filters);
   const tasks = useSelector((state) => state.tasks);
@@ -107,167 +104,33 @@ const Navigation = ({ onClose }) => {
       oneWeekAgo.setDate(oneWeekAgo.getDate() - 7);
       return createdDate >= oneWeekAgo;
     }).length,
+    calendar: tasks.length,
   };
-
-  // Define filter configurations for each navigation item
-  const getFilterConfig = (item) => {
-    switch (item) {
-      case "all":
-        return {
-          category: "all",
-          status: "all",
-          search: "",
-          priority: "all",
-          time: "all",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-      case "completed":
-        return {
-          category: "all",
-          status: "completed",
-          search: "",
-          priority: "all",
-          time: "all",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-      case "high":
-        return {
-          category: "all",
-          status: "all",
-          search: "",
-          priority: "high",
-          time: "all",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-      case "today":
-        return {
-          category: "all",
-          status: "all",
-          search: "",
-          priority: "all",
-          time: "today",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-      case "upcoming":
-        return {
-          category: "all",
-          status: "all",
-          search: "",
-          priority: "all",
-          time: "upcoming",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-      case "recent":
-        return {
-          category: "all",
-          status: "all",
-          search: "",
-          priority: "all",
-          time: "recent",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-      case "active":
-        return {
-          category: "all",
-          status: "active",
-          search: "",
-          priority: "all",
-          time: "all",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-      case "filters":
-        return filters; // Keep current filters when visiting filters page
-      case "analytics":
-        return filters; // Keep current filters when visiting analytics
-      case "settings":
-        return filters; // Keep current filters when visiting settings
-      default:
-        return {
-          category: "all",
-          status: "all",
-          search: "",
-          priority: "all",
-          time: "all",
-          tags: [],
-          partners: [],
-          sort: filters.sort || "date-desc",
-        };
-    }
-  };
-
-  const matchesConfig = (configName) => {
-    const config = getFilterConfig(configName);
-    if (["filters", "analytics", "settings"].includes(configName)) {
-      return activeItem === configName;
-    }
-
-    return (
-      filters.category === config.category &&
-      filters.status === config.status &&
-      filters.priority === config.priority &&
-      filters.time === config.time &&
-      JSON.stringify(filters.tags) === JSON.stringify(config.tags) &&
-      JSON.stringify(filters.partners) === JSON.stringify(config.partners) &&
-      filters.sort === config.sort &&
-      (!filters.search || configName === activeItem)
-    );
-  };
-
-  useEffect(() => {
-    if (matchesConfig("completed")) {
-      setActiveItem("completed");
-    } else if (matchesConfig("high")) {
-      setActiveItem("high");
-    } else if (matchesConfig("all")) {
-      setActiveItem("all");
-    } else if (matchesConfig("today")) {
-      setActiveItem("today");
-    } else if (matchesConfig("upcoming")) {
-      setActiveItem("upcoming");
-    } else if (matchesConfig("recent")) {
-      setActiveItem("recent");
-    } else if (matchesConfig("active")) {
-      setActiveItem("active");
-    } else {
-      setActiveItem("");
-    }
-    // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [filters, activeItem]);
 
   const handleItemClick = (item) => {
-    // Update filters based on the navigation item
     if (item !== "add") {
       dispatch(setFilters(getFilterConfig(item)));
     }
-
-    setActiveItem(item);
-
     if (window.innerWidth < 768) {
       onClose();
     }
   };
 
   const handleAddTask = () => {
-    openAddTaskModal();
     if (window.innerWidth < 768) {
       onClose();
     }
   };
 
+  const matchConfig = (item) => {
+    const config = getFilterConfig(item);
+    return (
+      config.status === filters.status &&
+      config.category === filters.category &&
+      config.priority === filters.priority &&
+      config.time === filters.time
+    );
+  };
   return (
     <div className="flex flex-col gap-2">
       {/* Search bar */}
@@ -278,13 +141,13 @@ const Navigation = ({ onClose }) => {
           icon={<FaInbox size={16} />}
           text="All Tasks"
           count={taskCounts.all}
-          active={activeItem === "all"}
+          active={matchConfig("all")}
           onClick={() => handleItemClick("all")}
         />
         <NavItem
           icon={<FaPlus size={16} />}
           text="Add Task"
-          active={activeItem === "add"}
+          active={false}
           onClick={handleAddTask}
         />
       </NavigationSection>
@@ -295,21 +158,22 @@ const Navigation = ({ onClose }) => {
           icon={<FaCalendarDay size={16} />}
           text="Today"
           count={taskCounts.today}
-          active={activeItem === "today"}
+          active={matchConfig("today")}
           onClick={() => handleItemClick("today")}
         />
         <NavItem
           icon={<FaCalendarAlt size={16} />}
           text="Upcoming"
           count={taskCounts.upcoming}
-          active={activeItem === "upcoming"}
+          active={matchConfig("upcoming")}
           onClick={() => handleItemClick("upcoming")}
         />
+
         <NavItem
           icon={<BsClockHistory size={16} />}
           text="Recently Added"
           count={taskCounts.recent}
-          active={activeItem === "recent"}
+          active={matchConfig("recent")}
           onClick={() => handleItemClick("recent")}
         />
       </NavigationSection>
@@ -320,21 +184,21 @@ const Navigation = ({ onClose }) => {
           icon={<FaCheckCircle size={16} />}
           text="Completed"
           count={taskCounts.completed}
-          active={activeItem === "completed"}
+          active={matchConfig("completed")}
           onClick={() => handleItemClick("completed")}
         />
         <NavItem
           icon={<FaExclamationCircle size={16} />}
           text="High Priority"
           count={taskCounts.high}
-          active={activeItem === "high"}
+          active={matchConfig("high")}
           onClick={() => handleItemClick("high")}
         />
         <NavItem
           icon={<FaRegCircle size={16} />}
           text="Active"
           count={taskCounts.active}
-          active={activeItem === "active"}
+          active={matchConfig("active")}
           onClick={() => handleItemClick("active")}
         />
       </NavigationSection>
@@ -344,19 +208,19 @@ const Navigation = ({ onClose }) => {
         <NavItem
           icon={<FaFilter size={16} />}
           text="Filters & Labels"
-          active={activeItem === "filters"}
+          active={false}
           onClick={() => handleItemClick("filters")}
         />
         <NavItem
           icon={<FaChartBar size={16} />}
           text="Analytics"
-          active={activeItem === "analytics"}
+          active={false}
           onClick={() => handleItemClick("analytics")}
         />
         <NavItem
           icon={<IoMdSettings size={16} />}
           text="Settings"
-          active={activeItem === "settings"}
+          active={false}
           onClick={() => handleItemClick("settings")}
         />
       </NavigationSection>
