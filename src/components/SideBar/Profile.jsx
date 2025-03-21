@@ -65,8 +65,8 @@ const Profile = () => {
 
       {/* User menu dropdown */}
       {showMenu && (
-        <div className="absolute top-10 right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200 dark:bg-gray-900">
-          <div className="border-b border-gray-100 px-4 py-2">
+        <div className="absolute top-10 right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
+          <div className="border-b border-gray-100 px-4 py-2 dark:border-gray-800">
             <p className="text-xs font-medium text-gray-500 dark:text-gray-400">
               Signed in as
             </p>
@@ -86,10 +86,10 @@ const Profile = () => {
           >
             Settings
           </button>
-          <div className="border-t border-gray-100">
+          <div className="border-t border-gray-100 dark:border-gray-800">
             <button
               onClick={toggleMenu}
-              className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-red-600 hover:bg-red-50 dark:text-red-400 dark:hover:bg-red-900"
+              className="flex w-full items-center gap-2 px-4 py-2 text-left text-sm font-medium text-red-600 dark:text-red-400"
             >
               <FiLogOut size={16} />
               Sign out

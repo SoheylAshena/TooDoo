@@ -34,13 +34,13 @@ const SideBar = () => {
       {/* Sidebar */}
       <div
         ref={sidebarRef}
-        className="fixed z-40 flex h-full w-80 -translate-x-full transform flex-col gap-4 overflow-y-auto bg-white p-5 shadow-xl transition-transform duration-300 ease-in-out md:relative md:w-96 md:translate-x-0 dark:bg-gray-900"
+        className="custom-scrollbar fixed z-40 flex h-full w-80 -translate-x-full transform flex-col gap-4 overflow-y-auto bg-white p-5 shadow-xl transition-transform duration-300 ease-in-out md:relative md:w-96 md:translate-x-0 dark:bg-gray-900"
       >
         {/* Close button Mobile */}
         <div className="mb-2 flex justify-end md:hidden">
           <button
             onClick={toggleSidebar}
-            className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100"
+            className="rounded-full p-2 transition-colors duration-200 hover:bg-gray-100 dark:hover:bg-gray-800"
             aria-label="Close sidebar"
           >
             <IoMdClose className="text-2xl text-gray-500 hover:text-gray-700 dark:text-gray-400 dark:hover:text-gray-300" />

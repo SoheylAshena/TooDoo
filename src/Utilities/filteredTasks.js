@@ -1,9 +1,4 @@
-import { useSelector } from "react-redux";
-
-export const useFilteredTasks = () => {
-  const tasks = useSelector((state) => state.tasks);
-  const filterOptions = useSelector((state) => state.filters);
-
+export const filteredData = (tasks, filterOptions) => {
   let result = [...tasks];
 
   // Apply status filter

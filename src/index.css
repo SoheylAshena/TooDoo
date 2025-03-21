@@ -19,32 +19,10 @@
   }
 }
 
-/* For Webkit browsers (Chrome, Safari, Edge) */
-.custom-scrollbar {
-  overflow-y: auto; /* or overflow-x for horizontal */
-  scrollbar-width: thin; /* For Firefox */
-  scrollbar-color: #1e90ff #f0f8ff; /* For Firefox */
-}
-
-/* Webkit-specific styling */
-.custom-scrollbar::-webkit-scrollbar {
-  width: 4px; /* Thinner scrollbar */
-}
-
-.custom-scrollbar::-webkit-scrollbar-track {
-  background: #f0f8ff; /* Light blue background */
-  border-radius: 4px;
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb {
-  background: #1e90ff; /* Blue thumb */
-  border-radius: 4px;
-  border: 1px solid #f0f8ff; /* Adjusted border for thinner scrollbar */
-}
-
-.custom-scrollbar::-webkit-scrollbar-thumb:hover {
-  background: #4169e1; /* Darker blue on hover */
-}
-.scrollbar-none::-webkit-scrollbar {
-  display: none;
+/* For Firefox */
+@media screen and (min-width: 768px) {
+  .custom-scrollbar {
+    scrollbar-width: thin; /* Makes scrollbar narrow */
+    scrollbar-color: #0015ff transparent; /* Thumb color, track transparent */
+  }
 }
