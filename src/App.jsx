@@ -2,6 +2,9 @@ import { Provider } from "react-redux";
 import { store } from "./context/store";
 import SideBar from "./components/SideBar/SideBar";
 import MainBody from "./components/MainBody";
+// Lazy load components to improve initial load performance
+
+// Loading spinner component
 
 function App() {
   return (

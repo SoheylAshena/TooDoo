@@ -77,6 +77,17 @@ export const getFilterConfig = (item) => {
         partners: [],
         sort: "date-desc",
       };
+    case "calendar":
+      return {
+        category: "calendar",
+        status: "all",
+        search: "",
+        priority: "all",
+        time: "all",
+        tags: [],
+        partners: [],
+        sort: "date-desc",
+      };
     case "filters":
       return;
     case "analytics":

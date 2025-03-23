@@ -1,6 +1,6 @@
 import { useRef } from "react";
 import Profile from "./Profile";
-import Navigation from "./Navigation";
+import Navigation from "./Navigation/Navigation";
 import Category from "./Category";
 import { HiMenuAlt2 } from "react-icons/hi";
 import { IoMdClose } from "react-icons/io";

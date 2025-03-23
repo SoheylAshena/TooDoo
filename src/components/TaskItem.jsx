@@ -7,45 +7,55 @@ import {
 import { AiOutlineClockCircle } from "react-icons/ai";
 import PropTypes from "prop-types";
 import clsx from "clsx";
+import { memo, useCallback } from "react";
 
-const TaskItem = ({ task, dispatch, toggleTask, deleteTasks }) => {
-  // Get priority badge styling
-  const getPriorityBadge = (priority) => {
-    const lowerPriority = priority?.toLowerCase() || "medium";
+// Move these helper functions outside the component to prevent recreation on every render
+const getPriorityBadge = (priority) => {
+  const lowerPriority = priority?.toLowerCase() || "medium";
 
-    if (lowerPriority === "high") {
-      return (
-        <span className="flex items-center rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-200">
-          <MdOutlinePriorityHigh className="mr-1" />
-          High
-        </span>
-      );
-    } else if (lowerPriority === "low") {
-      return (
-        <span className="flex items-center rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
-          <MdOutlineLowPriority className="mr-1" />
-          Low
-        </span>
-      );
-    } else {
-      return (
-        <span className="flex items-center rounded-full bg-yellow-100 px-2.5 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
-          <MdOutlinePriorityHigh className="mr-1" />
-          Medium
-        </span>
-      );
-    }
-  };
+  if (lowerPriority === "high") {
+    return (
+      <span className="flex items-center rounded-full bg-red-100 px-2.5 py-1 text-xs font-medium text-red-800 dark:bg-red-900 dark:text-red-200">
+        <MdOutlinePriorityHigh className="mr-1" />
+        High
+      </span>
+    );
+  } else if (lowerPriority === "low") {
+    return (
+      <span className="flex items-center rounded-full bg-green-100 px-2.5 py-1 text-xs font-medium text-green-800 dark:bg-green-900 dark:text-green-200">
+        <MdOutlineLowPriority className="mr-1" />
+        Low
+      </span>
+    );
+  } else {
+    return (
+      <span className="flex items-center rounded-full bg-yellow-100 px-2.5 py-1 text-xs font-medium text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200">
+        <MdOutlinePriorityHigh className="mr-1" />
+        Medium
+      </span>
+    );
+  }
+};
 
-  // Format date helper
-  const formatDate = (dateString) => {
-    const date = new Date(dateString);
-    return date.toLocaleDateString("en-US", {
-      month: "short",
-      day: "numeric",
-      year: "numeric",
-    });
-  };
+// Format date helper outside component
+const formatDate = (dateString) => {
+  const date = new Date(dateString);
+  return date.toLocaleDateString("en-US", {
+    month: "short",
+    day: "numeric",
+    year: "numeric",
+  });
+};
+
+const TaskItem = memo(({ task, dispatch, toggleTask, deleteTasks }) => {
+  // Memoized handlers
+  const handleToggle = useCallback(() => {
+    dispatch(toggleTask(task.id));
+  }, [dispatch, toggleTask, task.id]);
+
+  const handleDelete = useCallback(() => {
+    dispatch(deleteTasks(task.id));
+  }, [dispatch, deleteTasks, task.id]);
 
   return (
     <li
@@ -60,7 +70,7 @@ const TaskItem = ({ task, dispatch, toggleTask, deleteTasks }) => {
           <input
             type="checkbox"
             checked={task.completed}
-            onChange={() => dispatch(toggleTask(task.id))}
+            onChange={handleToggle}
             className="h-4.5 w-4.5 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-1"
           />
         </div>
@@ -100,58 +110,47 @@ const TaskItem = ({ task, dispatch, toggleTask, deleteTasks }) => {
                     key={tag}
                     className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400"
                   >
-                    #{tag}
+                    {tag}
                   </span>
                 ))}
 
-                {task.partners &&
-                  task.partners.map((partner) => (
-                    <span
-                      key={partner}
-                      className="rounded-full bg-green-50 px-2 py-0.5 text-xs text-green-600 dark:bg-green-900 dark:text-green-200"
-                    >
-                      @{partner}
-                    </span>
-                  ))}
+                {task.partners && task.partners.length > 0 && (
+                  <div className="flex flex-wrap gap-1">
+                    {task.partners.map((partner) => (
+                      <span
+                        key={partner}
+                        className="rounded-full bg-purple-100 px-2 py-0.5 text-xs text-purple-600 dark:bg-purple-900 dark:text-purple-300"
+                      >
+                        {partner}
+                      </span>
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
-        </div>
 
-        <div className="ml-1 flex flex-shrink-0 self-start">
-          <button
-            onClick={() => {
-              /* Add edit functionality here */
-            }}
-            className="rounded-full p-1.5 text-gray-400 transition-colors duration-200 hover:bg-indigo-50 hover:text-indigo-500 dark:text-gray-500 dark:hover:bg-indigo-900 dark:hover:text-indigo-400"
-            aria-label="Edit task"
-          >
-            <MdEdit size={18} />
-          </button>
-          <button
-            onClick={() => dispatch(deleteTasks(task.id))}
-            className="ml-1 rounded-full p-1.5 text-gray-400 transition-colors duration-200 hover:bg-red-50 hover:text-red-500 dark:text-gray-500 dark:hover:bg-red-900 dark:hover:text-red-400"
-            aria-label="Delete task"
-          >
-            <MdDelete size={18} />
-          </button>
+          <div className="mt-3 flex items-center justify-end gap-2">
+            <button
+              onClick={handleDelete}
+              className="rounded-md p-1 text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900 dark:hover:text-red-400"
+            >
+              <MdDelete className="text-lg" />
+            </button>
+            <button className="rounded-md p-1 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-900 dark:hover:text-indigo-400">
+              <MdEdit className="text-lg" />
+            </button>
+          </div>
         </div>
       </div>
     </li>
   );
-};
+});
+
+TaskItem.displayName = "TaskItem";
 
 TaskItem.propTypes = {
-  task: PropTypes.shape({
-    id: PropTypes.oneOfType([PropTypes.string, PropTypes.number]).isRequired,
-    text: PropTypes.string.isRequired,
-    completed: PropTypes.bool.isRequired,
-    date: PropTypes.string.isRequired,
-    category: PropTypes.string.isRequired,
-    priority: PropTypes.string,
-    tags: PropTypes.arrayOf(PropTypes.string),
-    partners: PropTypes.arrayOf(PropTypes.string),
-  }).isRequired,
+  task: PropTypes.object.isRequired,
   dispatch: PropTypes.func.isRequired,
   toggleTask: PropTypes.func.isRequired,
   deleteTasks: PropTypes.func.isRequired,

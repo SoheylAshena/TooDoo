@@ -1,21 +1,58 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { nanoid } from "nanoid";
 
+// Throttle localStorage writes to prevent excessive operations
+const throttle = (func, delay) => {
+  let lastCall = 0;
+  let timeoutId = null;
+
+  return function (...args) {
+    const now = Date.now();
+
+    if (now - lastCall < delay) {
+      // If not enough time has passed, clear the existing timeout
+      // and set a new one
+      clearTimeout(timeoutId);
+      timeoutId = setTimeout(() => {
+        lastCall = now;
+        func.apply(this, args);
+      }, delay);
+    } else {
+      // If enough time has passed, execute immediately
+      lastCall = now;
+      func.apply(this, args);
+    }
+  };
+};
+
 // Load tasks from localStorage if available
 const loadTasks = () => {
   try {
     const savedTasks = localStorage.getItem("tasks");
     const parsedTasks = savedTasks ? JSON.parse(savedTasks) : getDefaultTasks();
 
-    // Debug partners data
+    // Ensure partners is always an array
     if (parsedTasks && parsedTasks.length > 0) {
       parsedTasks.forEach((task) => {
-        // Ensure partners is always an array
         if (task.partners && !Array.isArray(task.partners)) {
-          console.log("Converting partners to array for task:", task.id);
           task.partners = task.partners.split
             ? task.partners.split(",")
             : [task.partners];
+        }
+
+        // Ensure tags is always an array
+        if (!task.tags) task.tags = [];
+
+        // Ensure dates are properly stored as ISO strings
+        if (task.date && !(typeof task.date === "string")) {
+          task.date = new Date(task.date).toISOString();
+        }
+
+        // Ensure createdAt exists and is properly formatted
+        if (!task.createdAt) {
+          task.createdAt = new Date().toISOString();
+        } else if (!(typeof task.createdAt === "string")) {
+          task.createdAt = new Date(task.createdAt).toISOString();
         }
       });
     }
@@ -76,14 +113,14 @@ const getDefaultTasks = () => [
   },
 ];
 
-// Save tasks to localStorage
-const saveTasks = (tasks) => {
+// Throttled save to localStorage to prevent excessive writes
+const saveTasks = throttle((tasks) => {
   try {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   } catch (error) {
     console.error("Error saving tasks to localStorage:", error);
   }
-};
+}, 1000); // Throttle to once per second maximum
 
 export const tasksSlice = createSlice({
   name: "tasks",
@@ -136,10 +173,49 @@ export const tasksSlice = createSlice({
         saveTasks(state);
       }
     },
+    // Batch updates for better performance
+    batchUpdateTasks: (state, action) => {
+      const { updates } = action.payload;
+      let hasChanges = false;
+
+      updates.forEach((update) => {
+        const { id, type, data } = update;
+
+        if (type === "toggle") {
+          const task = state.find((task) => task.id === id);
+          if (task) {
+            task.completed = !task.completed;
+            hasChanges = true;
+          }
+        } else if (type === "update") {
+          const index = state.findIndex((task) => task.id === id);
+          if (index !== -1) {
+            const existingTask = state[index];
+            state[index] = { ...existingTask, ...data };
+            hasChanges = true;
+          }
+        } else if (type === "delete") {
+          const newStateAfterDelete = state.filter((task) => task.id !== id);
+          if (newStateAfterDelete.length !== state.length) {
+            state = newStateAfterDelete;
+            hasChanges = true;
+          }
+        }
+      });
+
+      if (hasChanges) {
+        saveTasks(state);
+      }
+    },
   },
 });
 
-export const { addTasks, deleteTasks, toggleTask, updateTask } =
-  tasksSlice.actions;
+export const {
+  addTasks,
+  deleteTasks,
+  toggleTask,
+  updateTask,
+  batchUpdateTasks,
+} = tasksSlice.actions;
 
 export default tasksSlice.reducer;

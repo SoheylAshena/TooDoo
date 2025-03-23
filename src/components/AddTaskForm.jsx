@@ -1,7 +1,7 @@
 import { useState, useRef, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { addTasks } from "../../context/Slices/tasksSlice";
+import { addTasks } from "../context/Slices/tasksSlice";
 import { FaRegCalendarAlt, FaRegFlag, FaTimes } from "react-icons/fa";
 import { MdOutlineLabel, MdClose, MdPerson, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
@@ -329,7 +329,7 @@ const AddTaskForm = ({ onClose }) => {
               onChange={handleInputChange}
               onKeyDown={handleKeyDown}
               placeholder="What needs to be done? Use # for tags and + for people"
-              className="w-full rounded-xl border border-transparent bg-gray-50 px-5 py-4 text-lg font-medium placeholder-gray-400 shadow-sm transition-all focus:border-indigo-300 focus:bg-white focus:outline-none focus:ring-2 focus:ring-indigo-100"
+              className="w-full rounded-xl border border-transparent bg-gray-50 px-5 py-4 text-lg font-medium placeholder-gray-400 shadow-sm transition-all focus:border-indigo-300 focus:bg-white focus:ring-2 focus:ring-indigo-100 focus:outline-none"
             />
 
             {/* Suggestions */}
@@ -340,7 +340,7 @@ const AddTaskForm = ({ onClose }) => {
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.15 }}
-                  className="absolute left-0 right-0 mt-1 rounded-lg bg-white py-2 shadow-lg ring-1 ring-gray-200 backdrop-blur-lg"
+                  className="absolute right-0 left-0 mt-1 rounded-lg bg-white py-2 shadow-lg ring-1 ring-gray-200 backdrop-blur-lg"
                 >
                   {suggestions.slice(0, 5).map((suggestion, index) => (
                     <div
@@ -464,14 +464,14 @@ const AddTaskForm = ({ onClose }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute left-0 top-full z-10 mt-1 w-64 rounded-lg bg-white p-3 shadow-lg ring-1 ring-gray-200"
+                    className="absolute top-full left-0 z-10 mt-1 w-64 rounded-lg bg-white p-3 shadow-lg ring-1 ring-gray-200"
                   >
                     <input
                       type="datetime-local"
                       name="date"
                       value={task.date}
                       onChange={(e) => updateTask("date", e.target.value)}
-                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-300 focus:outline-none focus:ring-1 focus:ring-blue-300"
+                      className="w-full rounded-md border border-gray-300 px-3 py-2 text-sm shadow-sm focus:border-blue-300 focus:ring-1 focus:ring-blue-300 focus:outline-none"
                     />
                     <div className="mt-2 flex justify-end">
                       <button
@@ -505,7 +505,7 @@ const AddTaskForm = ({ onClose }) => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className="absolute left-0 top-full z-10 mt-1 w-40 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-gray-200"
+                    className="absolute top-full left-0 z-10 mt-1 w-40 overflow-hidden rounded-lg bg-white shadow-lg ring-1 ring-gray-200"
                   >
                     <button
                       type="button"

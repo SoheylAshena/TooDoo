@@ -5,6 +5,7 @@ import { setFilters } from "../context/Slices/filtersSlice";
 import PropTypes from "prop-types";
 import clsx from "clsx";
 import { useState } from "react";
+import { currentView } from "../context/Slices/CurrentSlice";
 
 const FilterPanel = ({ filterOptions, timeCategories }) => {
   const dispatch = useDispatch();
@@ -42,7 +43,7 @@ const FilterPanel = ({ filterOptions, timeCategories }) => {
               dispatch(setFilters({ ...filterOptions, search: e.target.value }))
             }
             placeholder="Search tasks..."
-            className="w-full rounded-lg border-none bg-gray-50 py-2 pl-10 pr-3 text-sm transition-colors focus:bg-white focus:outline-none focus:ring-1 focus:ring-indigo-500"
+            className="w-full rounded-lg border-none bg-gray-50 py-2 pr-3 pl-10 text-sm transition-colors focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:outline-none"
           />
         </div>
 
@@ -91,6 +92,7 @@ const FilterPanel = ({ filterOptions, timeCategories }) => {
                         setFilters({ ...filterOptions, status: option.value }),
                       );
                       setStatusOpen(false);
+                      dispatch(currentView(""));
                     }}
                   >
                     {option.label}
@@ -147,6 +149,7 @@ const FilterPanel = ({ filterOptions, timeCategories }) => {
                         }),
                       );
                       setCategoryOpen(false);
+                      dispatch(currentView(""));
                     }}
                   >
                     {category.label}
@@ -203,6 +206,7 @@ const FilterPanel = ({ filterOptions, timeCategories }) => {
                         }),
                       );
                       setPriorityOpen(false);
+                      dispatch(currentView(""));
                     }}
                   >
                     {option.label}
