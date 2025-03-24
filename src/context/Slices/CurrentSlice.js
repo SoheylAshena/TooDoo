@@ -7,7 +7,7 @@ const currentSlice = createSlice({
   initialState,
   reducers: {
     currentView: (state, action) => {
-      state = action.payload;
+      return action.payload;
     },
   },
 });

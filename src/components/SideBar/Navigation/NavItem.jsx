@@ -1,18 +1,67 @@
 import PropTypes from "prop-types";
 import clsx from "clsx";
+import { useSelector, useDispatch } from "react-redux";
+import { setFilters } from "../../../context/Slices/filtersSlice";
+import { getFilterConfig } from "../../../Utilities/filterUtils";
+import { currentView } from "../../../context/Slices/CurrentSlice";
+import useTaskCounts from "../../../hooks/useTaskCounts";
 
-const NavItem = ({ icon, text, count, active, onClick, danger }) => {
-  console.log("rendering");
+const NavItem = ({ icon, text, navItem, onClose }) => {
+  const dispatch = useDispatch();
+  const filters = useSelector((state) => state.filters);
+  const activeView = useSelector((state) => state.current);
+  const taskCounts = useTaskCounts();
+
+  const handleItemClick = () => {
+    if (navItem && navItem !== "add") {
+      try {
+        // First set the current view, then apply filters
+        dispatch(currentView(navItem));
+        const config = getFilterConfig(navItem);
+        if (config) {
+          dispatch(setFilters(config));
+        } else {
+          console.error("Invalid filter configuration for:", navItem);
+        }
+      } catch (error) {
+        console.error("Error changing navigation:", error);
+      }
+    }
+
+    if (window.innerWidth < 768 && onClose) {
+      onClose();
+    }
+  };
+
+  const matchConfig = (item) => {
+    if (!item) return false;
+    const config = getFilterConfig(item);
+    if (!config) return false;
+
+    return (
+      config.status === filters.status &&
+      config.category === filters.category &&
+      config.priority === filters.priority &&
+      config.time === filters.time
+    );
+  };
+
+  // Determine if this item is active
+  const active = navItem
+    ? activeView === navItem || matchConfig(navItem)
+    : false;
+
+  // Get the count for this specific nav item
+  const count = navItem ? taskCounts[navItem] : undefined;
+
   return (
     <li
-      onClick={onClick}
+      onClick={handleItemClick}
       className={clsx(
         "flex cursor-pointer items-center justify-between rounded-xl px-3 py-2.5 font-medium transition-all duration-200",
         active
           ? "bg-indigo-100 text-indigo-800 dark:bg-indigo-900 dark:text-indigo-200"
           : "text-gray-700 hover:bg-gray-100 hover:text-gray-900 dark:text-gray-300 dark:hover:bg-gray-900 dark:hover:text-gray-100",
-        danger &&
-          "text-red-600 hover:bg-red-50 hover:text-red-700 dark:text-red-400 dark:hover:bg-red-900 dark:hover:text-red-100",
       )}
     >
       <div className="flex items-center gap-3">
@@ -48,10 +97,9 @@ NavItem.displayName = "NavItem";
 NavItem.propTypes = {
   icon: PropTypes.node.isRequired,
   text: PropTypes.string.isRequired,
-  count: PropTypes.number,
-  active: PropTypes.bool,
-  onClick: PropTypes.func,
+  navItem: PropTypes.string,
   danger: PropTypes.bool,
+  onClose: PropTypes.func,
 };
 
 export default NavItem;
