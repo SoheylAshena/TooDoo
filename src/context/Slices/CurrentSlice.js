@@ -1,15 +1,13 @@
 import { createSlice } from "@reduxjs/toolkit";
 
-const initialState = {
-  currentView: "tasks",
-};
+const initialState = "tasks";
 
 const currentSlice = createSlice({
   name: "current",
   initialState,
   reducers: {
     currentView: (state, action) => {
-      state.currentView = action.payload;
+      state = action.payload;
     },
   },
 });

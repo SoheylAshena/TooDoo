@@ -24,7 +24,7 @@ import useTaskCounts from "../../../hooks/useTaskCounts";
 const Navigation = ({ onClose }) => {
   const dispatch = useDispatch();
   const filters = useSelector((state) => state.filters);
-  const activeView = useSelector((state) => state.current.currentView);
+  const activeView = useSelector((state) => state.current);
   const taskCounts = useTaskCounts();
 
   const handleItemClick = (item) => {
@@ -37,11 +37,11 @@ const Navigation = ({ onClose }) => {
     }
   };
 
-  const handleAddTask = () => {
-    if (window.innerWidth < 768) {
-      onClose();
-    }
-  };
+  // const handleAddTask = () => {
+  //   if (window.innerWidth < 768) {
+  //     onClose();
+  //   }
+  // };
 
   const matchConfig = (item) => {
     const config = getFilterConfig(item);
@@ -56,16 +56,12 @@ const Navigation = ({ onClose }) => {
   const clickHandlers = {
     all: () => handleItemClick("all"),
     calendar: () => handleItemClick("calendar"),
-    add: handleAddTask,
     today: () => handleItemClick("today"),
     upcoming: () => handleItemClick("upcoming"),
     recent: () => handleItemClick("recent"),
     completed: () => handleItemClick("completed"),
     high: () => handleItemClick("high"),
     active: () => handleItemClick("active"),
-    filters: () => handleItemClick("filters"),
-    analytics: () => handleItemClick("analytics"),
-    settings: () => handleItemClick("settings"),
   };
 
   const activeStates = {
@@ -166,19 +162,16 @@ const Navigation = ({ onClose }) => {
           icon={<FaFilter size={16} />}
           text="Filters & Labels"
           active={false}
-          onClick={clickHandlers.filters}
         />
         <NavItem
           icon={<FaChartBar size={16} />}
           text="Analytics"
           active={false}
-          onClick={clickHandlers.analytics}
         />
         <NavItem
           icon={<IoMdSettings size={16} />}
           text="Settings"
           active={false}
-          onClick={clickHandlers.settings}
         />
       </NavigationSection>
     </div>

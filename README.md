@@ -1,57 +1,67 @@
-# TooDoo - Modern Task Management App
+# TooDoo - Advanced Task Management App
 
-TooDoo is a professional task management application built with React, Redux, and TailwindCSS. It features a modern UI, responsive design, and Progressive Web App (PWA) capabilities.
+## Overview
+
+TooDoo is a high-performance, responsive task management application built with React and Redux. It features an elegant UI with dark mode support, advanced task filtering, natural language processing, calendar view, and more.
 
 ## Features
 
-- ✅ Create, edit, and delete tasks
-- 🏷️ Add categories and tags to organize your tasks
-- 👥 Assign collaborators to tasks
-- 🔍 Filter and search tasks
-- 🔄 Sort tasks by date or priority
-- 📱 Responsive design for mobile and desktop
-- 🌐 Works offline with PWA capabilities
-- 💾 Automatic data persistence with localStorage
+- **Modern UI with Dark Mode**: Clean, intuitive interface that automatically adapts to system preferences
+- **Natural Language Processing**: Add tasks with smart parsing (e.g., "Buy milk #grocery +John in Shopping")
+- **Calendar View**: Visualize tasks in a monthly calendar layout
+- **Advanced Filtering**: Filter tasks by status, priority, date range, and category
+- **Performance Optimized**: Leverages React memo, useCallback, and useMemo for minimal rerenders
+- **Responsive Design**: Works seamlessly on mobile, tablet, and desktop devices
+- **Categorization**: Organize tasks by custom categories
+- **Tagging System**: Add tags to tasks for better organization
+- **Collaboration**: Assign tasks to partners/collaborators
+- **Priority Levels**: Set High, Medium, or Low priority for tasks
+
+## Technical Implementation
+
+- **React**: UI built with React 18 using functional components and hooks
+- **Redux**: State management with Redux Toolkit
+- **Code Splitting**: Lazy-loaded components for better performance
+- **Tailwind CSS**: Utility-first CSS framework for styling
+- **Framer Motion**: Smooth animations for an enhanced user experience
+- **Optimized Rerenders**: Components are memoized to minimize unnecessary rerenders
+- **Modular Architecture**: Code is organized into reusable, maintainable components
 
 ## Getting Started
 
 ### Prerequisites
 
 - Node.js (v14 or higher)
-- npm or yarn
+- npm
 
 ### Installation
 
 1. Clone the repository:
 
-```bash
-git clone https://github.com/yourusername/toodoo.git
-cd toodoo
-```
+   ```
+   git clone https://github.com/SoheylAshena/TooDoo.git
+   cd toodoo
+   ```
 
 2. Install dependencies:
 
-```bash
-npm install
-# or
-yarn
-```
+   ```
+   npm install
+
+   ```
 
 3. Start the development server:
 
-```bash
-npm run dev
-# or
-yarn dev
-```
+   ```
+   npm run dev
+
+   ```
 
 4. Open your browser and navigate to `http://localhost:3000`
 
-## Building for Production
+### Building for Production
 
-To create a production build:
-
-```bash
+```
 npm run build
 # or
 yarn build
@@ -59,21 +69,33 @@ yarn build
 
 The build artifacts will be stored in the `dist/` directory.
 
-## PWA Features
+## Project Structure
 
-TooDoo is a Progressive Web App, which means you can:
+```
+src/
+├── components/       # UI components
+│   ├── SideBar/      # Sidebar components
+│   ├── AddTaskForm.jsx
+│   ├── Calendar.jsx
+│   ├── FilterPanel.jsx
+│   ├── MainBody.jsx
+│   ├── TaskItem.jsx
+│   └── ...
+├── context/         # Redux store and slices
+│   ├── Slices/
+│   │   ├── tasksSlice.js
+│   │   ├── filtersSlice.js
+│   │   └── ...
+│   └── store.js
+├── hooks/           # Custom React hooks
+├── Utilities/       # Helper functions
+├── App.jsx          # Main app component
+└── main.jsx         # Entry point
+```
 
-- Install it on your device
-- Use it offline
-- Receive updates automatically
+## Contributing
 
-## Technologies Used
-
-- React
-- Redux Toolkit
-- TailwindCSS
-- Vite
-- PWA (Progressive Web App)
+Contributions are welcome! Please feel free to submit a Pull Request.
 
 ## License
 

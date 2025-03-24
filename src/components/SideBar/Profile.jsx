@@ -15,7 +15,7 @@ const Profile = () => {
     <div className="relative">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-3">
-          <div className="relative">
+          <div>
             <FiUser
               size={40}
               className="rounded-full border-2 border-indigo-500 object-cover text-indigo-500 shadow-md dark:border-indigo-400 dark:text-indigo-400"

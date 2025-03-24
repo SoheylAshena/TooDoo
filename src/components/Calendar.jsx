@@ -1,5 +1,5 @@
 import { useSelector } from "react-redux";
-import { useState, useMemo, Fragment } from "react";
+import { useState, useMemo, memo } from "react";
 import {
   IoChevronBackOutline,
   IoChevronForwardOutline,
@@ -11,7 +11,7 @@ import { toggleTask } from "../context/Slices/tasksSlice";
 import PropTypes from "prop-types";
 
 // Day Cell component to prevent re-renders of the entire calendar
-const DayCell = ({ day, tasks, currentDate, dispatch, onDayClick }) => {
+const DayCell = memo(({ day, tasks, currentDate, dispatch, onDayClick }) => {
   if (day === null) {
     return (
       <div className="min-h-[120px] bg-gray-50 p-2 opacity-50 dark:bg-gray-800" />
@@ -72,7 +72,7 @@ const DayCell = ({ day, tasks, currentDate, dispatch, onDayClick }) => {
                   e.stopPropagation();
                   dispatch(toggleTask(task.id));
                 }}
-                className="h-3 w-3 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500"
+                className="h-3 w-3 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500 dark:border-indigo-500 dark:focus:ring-indigo-400"
               />
               <div
                 className={`truncate font-medium ${
@@ -94,7 +94,9 @@ const DayCell = ({ day, tasks, currentDate, dispatch, onDayClick }) => {
       </div>
     </div>
   );
-};
+});
+
+DayCell.displayName = "DayCell";
 
 DayCell.propTypes = {
   day: PropTypes.number,
@@ -104,312 +106,308 @@ DayCell.propTypes = {
   onDayClick: PropTypes.func.isRequired,
 };
 
-const TaskDetailsModal = ({
-  selectedDay,
-  tasks,
-  currentDate,
-  onClose,
-  dispatch,
-}) => {
-  if (!selectedDay) return null;
-
-  const dayDate = new Date(
-    currentDate.getFullYear(),
-    currentDate.getMonth(),
-    selectedDay,
-  );
-  const formattedDate = dayDate.toLocaleDateString("en-US", {
-    weekday: "long",
+// Calendar header component to reduce rerenders
+const CalendarHeader = memo(({ currentDate, onPrevMonth, onNextMonth }) => {
+  const formattedDate = currentDate.toLocaleDateString("en-US", {
     month: "long",
-    day: "numeric",
     year: "numeric",
   });
 
   return (
-    <div className="fixed inset-0 z-50 overflow-y-auto" onClick={onClose}>
-      <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
-        <div
-          className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity"
-          aria-hidden="true"
-        />
+    <div className="mb-4 flex items-center justify-between rounded-lg bg-indigo-50 p-3 dark:bg-indigo-900">
+      <button
+        onClick={onPrevMonth}
+        className="rounded-full p-1.5 text-indigo-800 hover:bg-indigo-100 dark:text-indigo-200 dark:hover:bg-indigo-800"
+      >
+        <IoChevronBackOutline className="h-6 w-6" />
+      </button>
+      <h3 className="text-lg font-bold text-indigo-800 dark:text-indigo-200">
+        {formattedDate}
+      </h3>
+      <button
+        onClick={onNextMonth}
+        className="rounded-full p-1.5 text-indigo-800 hover:bg-indigo-100 dark:text-indigo-200 dark:hover:bg-indigo-800"
+      >
+        <IoChevronForwardOutline className="h-6 w-6" />
+      </button>
+    </div>
+  );
+});
 
-        <div
-          className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle dark:bg-gray-800"
-          onClick={(e) => e.stopPropagation()}
-        >
-          <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 dark:bg-gray-800">
-            <div className="sm:flex sm:items-start">
-              <div className="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
-                <div className="mb-4 flex items-center justify-between">
-                  <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
-                    Tasks for {formattedDate}
-                  </h3>
-                  <button
-                    onClick={onClose}
-                    className="rounded-full p-1 text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-gray-300 dark:hover:text-white"
-                  >
-                    <IoClose className="h-6 w-6" />
-                  </button>
-                </div>
+CalendarHeader.displayName = "CalendarHeader";
 
-                {tasks && tasks.length > 0 ? (
-                  <div className="mt-2 max-h-[60vh] space-y-3 overflow-y-auto">
-                    {tasks.map((task) => (
-                      <div
-                        key={task.id}
-                        className={`rounded-lg border ${
-                          task.completed
-                            ? "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                            : task.priority === "High"
-                              ? "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
-                              : task.priority === "Low"
-                                ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
-                                : "border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950"
-                        } p-3`}
-                      >
-                        <div className="flex items-start gap-3">
-                          <input
-                            type="checkbox"
-                            checked={task.completed}
-                            onChange={() => dispatch(toggleTask(task.id))}
-                            className="mt-1 h-4 w-4 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500"
-                          />
-                          <div className="flex-1">
-                            <div
-                              className={`text-base font-medium ${
-                                task.completed
-                                  ? "text-gray-400 line-through dark:text-gray-500"
-                                  : "text-gray-800 dark:text-gray-200"
-                              }`}
-                            >
-                              {task.text}
-                            </div>
-                            <div className="mt-2 flex flex-wrap items-center gap-2">
-                              <span className="rounded-md bg-indigo-50 px-2 py-1 text-xs font-medium text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300">
-                                {task.category}
-                              </span>
-                              <span
-                                className={`rounded-full px-2 py-1 text-xs font-medium ${
-                                  task.priority === "High"
-                                    ? "bg-red-100 text-red-800 dark:bg-red-900 dark:text-red-200"
-                                    : task.priority === "Low"
-                                      ? "bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-200"
-                                      : "bg-yellow-100 text-yellow-800 dark:bg-yellow-900 dark:text-yellow-200"
+CalendarHeader.propTypes = {
+  currentDate: PropTypes.instanceOf(Date).isRequired,
+  onPrevMonth: PropTypes.func.isRequired,
+  onNextMonth: PropTypes.func.isRequired,
+};
+
+const TaskDetailsModal = memo(
+  ({ selectedDay, tasks, currentDate, onClose, dispatch }) => {
+    if (!selectedDay) return null;
+
+    const dayDate = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      selectedDay,
+    );
+    const formattedDate = dayDate.toLocaleDateString("en-US", {
+      weekday: "long",
+      month: "long",
+      day: "numeric",
+      year: "numeric",
+    });
+
+    return (
+      <div className="fixed inset-0 z-50 overflow-y-auto" onClick={onClose}>
+        <div className="flex min-h-screen items-end justify-center px-4 pt-4 pb-20 text-center sm:block sm:p-0">
+          <div
+            className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity"
+            aria-hidden="true"
+          />
+
+          <div
+            className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle dark:bg-gray-800"
+            onClick={(e) => e.stopPropagation()}
+          >
+            <div className="bg-white px-4 pt-5 pb-4 sm:p-6 sm:pb-4 dark:bg-gray-800">
+              <div className="sm:flex sm:items-start">
+                <div className="mt-3 w-full text-center sm:mt-0 sm:ml-4 sm:text-left">
+                  <div className="mb-4 flex items-center justify-between">
+                    <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+                      Tasks for {formattedDate}
+                    </h3>
+                    <button
+                      onClick={onClose}
+                      className="rounded-full p-1 text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-gray-300 dark:hover:text-white"
+                    >
+                      <IoClose className="h-6 w-6" />
+                    </button>
+                  </div>
+                  <div className="mt-2 max-h-96 overflow-y-auto">
+                    {tasks.length === 0 ? (
+                      <p className="text-center text-gray-500 dark:text-gray-400">
+                        No tasks for this day
+                      </p>
+                    ) : (
+                      <ul className="space-y-2">
+                        {tasks.map((task) => (
+                          <li
+                            key={task.id}
+                            className={`rounded-lg border p-3 ${
+                              task.completed
+                                ? "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
+                                : task.priority === "High"
+                                  ? "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
+                                  : task.priority === "Low"
+                                    ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
+                                    : "border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950"
+                            }`}
+                          >
+                            <div className="flex items-center gap-2">
+                              <input
+                                type="checkbox"
+                                checked={task.completed}
+                                onChange={() => dispatch(toggleTask(task.id))}
+                                className="h-4 w-4 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500 dark:border-indigo-500 dark:focus:ring-indigo-400"
+                              />
+                              <div
+                                className={`flex-1 ${
+                                  task.completed
+                                    ? "text-gray-400 line-through dark:text-gray-500"
+                                    : "text-gray-800 dark:text-gray-200"
                                 }`}
                               >
-                                {task.priority} Priority
-                              </span>
-                            </div>
-                            {task.tags && task.tags.length > 0 && (
-                              <div className="mt-2 flex flex-wrap gap-1.5">
-                                {task.tags.map((tag) => (
-                                  <span
-                                    key={tag}
-                                    className="rounded-full bg-gray-100 px-2 py-0.5 text-xs text-gray-600 dark:bg-gray-800 dark:text-gray-400"
-                                  >
-                                    {tag}
+                                <div className="font-medium">{task.text}</div>
+                                <div className="mt-2 flex flex-wrap gap-2">
+                                  <span className="rounded-md bg-indigo-50 px-2 py-0.5 text-xs font-medium text-indigo-600 dark:bg-indigo-900 dark:text-indigo-300">
+                                    {task.category}
                                   </span>
-                                ))}
+                                  <span
+                                    className={`rounded-md px-2 py-0.5 text-xs font-medium ${
+                                      task.priority === "High"
+                                        ? "bg-red-50 text-red-600 dark:bg-red-900 dark:text-red-300"
+                                        : task.priority === "Low"
+                                          ? "bg-green-50 text-green-600 dark:bg-green-900 dark:text-green-300"
+                                          : "bg-yellow-50 text-yellow-600 dark:bg-yellow-900 dark:text-yellow-300"
+                                    }`}
+                                  >
+                                    {task.priority}
+                                  </span>
+                                </div>
                               </div>
-                            )}
-                            {task.partners && task.partners.length > 0 && (
-                              <div className="mt-2 text-xs text-gray-500 dark:text-gray-400">
-                                With: {task.partners.join(", ")}
-                              </div>
-                            )}
-                          </div>
-                        </div>
-                      </div>
-                    ))}
+                            </div>
+                          </li>
+                        ))}
+                      </ul>
+                    )}
                   </div>
-                ) : (
-                  <div className="mt-2 py-6 text-center text-gray-500 dark:text-gray-400">
-                    No tasks scheduled for this day
-                  </div>
-                )}
+                </div>
               </div>
+            </div>
+            <div className="bg-gray-50 px-4 py-3 sm:flex sm:flex-row-reverse sm:px-6 dark:bg-gray-700">
+              <button
+                type="button"
+                onClick={onClose}
+                className="mt-3 inline-flex w-full justify-center rounded-md border border-gray-300 bg-white px-4 py-2 text-base font-medium text-gray-700 shadow-sm hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none sm:mt-0 sm:ml-3 sm:w-auto sm:text-sm dark:border-gray-600 dark:bg-gray-800 dark:text-white dark:hover:bg-gray-700"
+              >
+                Close
+              </button>
             </div>
           </div>
         </div>
       </div>
-    </div>
-  );
-};
+    );
+  },
+);
+
+TaskDetailsModal.displayName = "TaskDetailsModal";
 
 TaskDetailsModal.propTypes = {
   selectedDay: PropTypes.number,
   tasks: PropTypes.array,
-  currentDate: PropTypes.instanceOf(Date).isRequired,
+  currentDate: PropTypes.instanceOf(Date),
   onClose: PropTypes.func.isRequired,
   dispatch: PropTypes.func.isRequired,
 };
 
-// Main Calendar component
 const Calendar = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
-  const filterOptions = useSelector((state) => state.filters);
-
-  // State for current month and year
+  const filters = useSelector((state) => state.filters);
   const [currentDate, setCurrentDate] = useState(new Date());
-
-  // State for selected day and its tasks
   const [selectedDay, setSelectedDay] = useState(null);
-  const [selectedDayTasks, setSelectedDayTasks] = useState(null);
+  const [dayTasks, setDayTasks] = useState([]);
 
-  // Navigation functions
+  // Get filtered tasks once using useMemo
+  const filteredTasks = useMemo(
+    () => filteredData(tasks, filters),
+    [tasks, filters],
+  );
+
+  // Create an array of day cells for the current month
+  const dayCells = useMemo(() => {
+    const daysInMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth() + 1,
+      0,
+    ).getDate();
+
+    const firstDayOfMonth = new Date(
+      currentDate.getFullYear(),
+      currentDate.getMonth(),
+      1,
+    ).getDay();
+
+    // Group tasks by day
+    const tasksByDay = {};
+
+    filteredTasks.forEach((task) => {
+      const taskDate = new Date(task.date);
+      if (
+        taskDate.getMonth() === currentDate.getMonth() &&
+        taskDate.getFullYear() === currentDate.getFullYear()
+      ) {
+        const day = taskDate.getDate();
+        if (!tasksByDay[day]) {
+          tasksByDay[day] = [];
+        }
+        tasksByDay[day].push(task);
+      }
+    });
+
+    // Create calendar grid (6 rows x 7 columns)
+    const cells = [];
+    let dayCounter = 1;
+    let emptyCellsAtStart = firstDayOfMonth;
+
+    // Add empty cells for days before the month starts
+    for (let i = 0; i < emptyCellsAtStart; i++) {
+      cells.push(null);
+    }
+
+    // Add cells for all days in the month
+    while (dayCounter <= daysInMonth) {
+      cells.push({
+        day: dayCounter,
+        tasks: tasksByDay[dayCounter] || [],
+      });
+      dayCounter++;
+    }
+
+    // Add empty cells at the end to complete the grid
+    while (cells.length % 7 !== 0) {
+      cells.push(null);
+    }
+
+    return cells;
+  }, [currentDate, filteredTasks]);
+
   const goToPreviousMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() - 1, 1),
     );
+    setSelectedDay(null);
   };
 
   const goToNextMonth = () => {
     setCurrentDate(
       new Date(currentDate.getFullYear(), currentDate.getMonth() + 1, 1),
     );
+    setSelectedDay(null);
   };
 
-  // Handle day click
-  const handleDayClick = (day, dayTasks) => {
+  const handleDayClick = (day, tasks) => {
     setSelectedDay(day);
-    setSelectedDayTasks(dayTasks);
+    setDayTasks(tasks || []);
   };
 
-  // Close modal
   const closeModal = () => {
     setSelectedDay(null);
-    setSelectedDayTasks(null);
+    setDayTasks([]);
   };
 
-  // Get month name and days in month
-  const monthName = currentDate.toLocaleString("default", { month: "long" });
-  const year = currentDate.getFullYear();
-
-  // Use filteredData function directly where needed
-  const filteredTasks = useMemo(
-    () => filteredData(tasks, filterOptions),
-    [tasks, filterOptions],
+  // Memoized weekday headers
+  const weekDays = useMemo(
+    () =>
+      ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"].map((day) => (
+        <div
+          key={day}
+          className="p-2 text-center font-semibold text-gray-700 dark:text-gray-300"
+        >
+          {day}
+        </div>
+      )),
+    [],
   );
 
-  // Calculate calendar data
-  const calendarData = useMemo(() => {
-    const firstDayOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth(),
-      1,
-    );
-    const lastDayOfMonth = new Date(
-      currentDate.getFullYear(),
-      currentDate.getMonth() + 1,
-      0,
-    );
-    const daysInMonth = lastDayOfMonth.getDate();
-
-    const firstDayOfWeek = firstDayOfMonth.getDay();
-    const days = Array(firstDayOfWeek).fill(null);
-
-    for (let i = 1; i <= daysInMonth; i++) {
-      days.push(i);
-    }
-
-    return days;
-  }, [currentDate]);
-
-  // Group tasks by date
-  const tasksByDate = useMemo(() => {
-    const groupedTasks = {};
-
-    filteredTasks.forEach((task) => {
-      const taskDate = new Date(task.date);
-
-      if (
-        taskDate.getMonth() === currentDate.getMonth() &&
-        taskDate.getFullYear() === currentDate.getFullYear()
-      ) {
-        const day = taskDate.getDate();
-
-        if (!groupedTasks[day]) {
-          groupedTasks[day] = [];
-        }
-
-        groupedTasks[day].push(task);
-      }
-    });
-
-    return groupedTasks;
-  }, [filteredTasks, currentDate]);
-
-  // Array of day names
-  const dayNames = ["Sun", "Mon", "Tue", "Wed", "Thu", "Fri", "Sat"];
-
   return (
-    <div className="min-h-screen w-full bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 md:p-8 dark:from-indigo-900 dark:via-gray-900 dark:to-purple-900">
-      <div className="mx-auto max-w-6xl">
-        <div className="mb-6 flex flex-col justify-between gap-4 md:mb-8 md:flex-row md:items-center">
-          <h2 className="text-2xl font-bold tracking-tight text-indigo-800 md:text-3xl dark:text-indigo-200">
-            Calendar View
-          </h2>
+    <div className="rounded-lg bg-white p-4 shadow-md dark:bg-gray-900">
+      <CalendarHeader
+        currentDate={currentDate}
+        onPrevMonth={goToPreviousMonth}
+        onNextMonth={goToNextMonth}
+      />
 
-          <div className="flex items-center space-x-2 self-end md:space-x-4 md:self-auto">
-            <button
-              onClick={goToPreviousMonth}
-              className="flex items-center rounded-lg bg-indigo-100 px-3 py-1.5 text-sm font-medium text-indigo-700 transition-colors hover:bg-indigo-200 md:px-4 md:py-2 dark:bg-indigo-900 dark:text-indigo-300 dark:hover:bg-indigo-800"
-            >
-              <IoChevronBackOutline className="mr-1 md:mr-2" />
-              Prev
-            </button>
+      <div className="grid grid-cols-7 gap-px bg-gray-200 dark:bg-gray-700">
+        {weekDays}
 
-            <span className="text-lg font-semibold text-gray-700 md:text-xl dark:text-gray-200">
-              {monthName} {year}
-            </span>
-
-            <button
-              onClick={goToNextMonth}
-              className="flex items-center rounded-lg bg-indigo-100 px-3 py-1.5 text-sm font-medium text-indigo-700 transition-colors hover:bg-indigo-200 md:px-4 md:py-2 dark:bg-indigo-900 dark:text-indigo-300 dark:hover:bg-indigo-800"
-            >
-              Next
-              <IoChevronForwardOutline className="ml-1 md:ml-2" />
-            </button>
-          </div>
-        </div>
-
-        {/* Calendar Grid */}
-        <div className="overflow-hidden rounded-xl border border-gray-100 bg-white shadow-lg dark:border-gray-700 dark:bg-gray-800">
-          {/* Day names header */}
-          <div className="grid grid-cols-7 divide-x divide-gray-200 bg-gray-50 dark:divide-gray-700 dark:bg-gray-800">
-            {dayNames.map((day, index) => (
-              <div
-                key={index}
-                className="py-2 text-center font-semibold text-gray-700 dark:text-gray-300"
-              >
-                {day}
-              </div>
-            ))}
-          </div>
-
-          {/* Calendar days */}
-          <div className="grid grid-cols-7 divide-x divide-y divide-gray-200 dark:divide-gray-700">
-            {calendarData.map((day, index) => (
-              <Fragment key={index}>
-                <DayCell
-                  day={day}
-                  tasks={tasksByDate[day] || []}
-                  currentDate={currentDate}
-                  dispatch={dispatch}
-                  onDayClick={handleDayClick}
-                />
-              </Fragment>
-            ))}
-          </div>
-        </div>
+        {dayCells.map((cell, index) => (
+          <DayCell
+            key={`cell-${index}`}
+            day={cell?.day || null}
+            tasks={cell?.tasks || []}
+            currentDate={currentDate}
+            dispatch={dispatch}
+            onDayClick={handleDayClick}
+          />
+        ))}
       </div>
 
-      {/* Task details modal */}
       {selectedDay && (
         <TaskDetailsModal
           selectedDay={selectedDay}
-          tasks={selectedDayTasks}
+          tasks={dayTasks}
           currentDate={currentDate}
           onClose={closeModal}
           dispatch={dispatch}
@@ -419,4 +417,4 @@ const Calendar = () => {
   );
 };
 
-export default Calendar;
+export default memo(Calendar);

@@ -1,5 +1,22 @@
 @import "tailwindcss";
+
 @custom-variant dark (&:where(.dark, .dark *));
+
+:root {
+  --primary-color: theme("colors.indigo.600");
+  --primary-dark: theme("colors.indigo.800");
+  --primary-light: theme("colors.indigo.400");
+  --bg-gradient-start: theme("colors.indigo.500");
+  --bg-gradient-end: theme("colors.purple.600");
+}
+
+.dark {
+  --primary-color: theme("colors.indigo.500");
+  --primary-dark: theme("colors.indigo.700");
+  --primary-light: theme("colors.indigo.300");
+  --bg-gradient-start: theme("colors.indigo.900");
+  --bg-gradient-end: theme("colors.purple.900");
+}
 
 /* Default sidebar behavior */
 .sidebar {
@@ -8,7 +25,7 @@
 }
 
 /* When the sidebar is open */
-.is-open {
+.sidebar.is-open {
   transform: translateX(0);
 }
 
@@ -19,10 +36,33 @@
   }
 }
 
-/* For Firefox */
-@media screen and (min-width: 768px) {
-  .custom-scrollbar {
-    scrollbar-width: thin; /* Makes scrollbar narrow */
-    scrollbar-color: #0015ff transparent; /* Thumb color, track transparent */
-  }
+/* Scrollbar styling */
+.custom-scrollbar {
+  scrollbar-width: thin; /* Firefox */
+  scrollbar-color: var(--primary-color) transparent; /* Firefox */
+}
+
+.custom-scrollbar::-webkit-scrollbar {
+  width: 6px; /* width of the scrollbar */
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+  background: transparent; /* track color */
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+  background-color: var(--primary-color); /* thumb color */
+  border-radius: 20px; /* roundness of the thumb */
+}
+
+/* Transition utilities */
+.transition-all {
+  transition-property: all;
+  transition-timing-function: cubic-bezier(0.4, 0, 0.2, 1);
+  transition-duration: 150ms;
+}
+
+/* Focus ring utility */
+.focus-ring {
+  @apply focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:focus:ring-indigo-400 dark:focus:ring-offset-gray-900;
 }
