@@ -15,10 +15,12 @@ import { BsClockHistory } from "react-icons/bs";
 import { IoMdSettings } from "react-icons/io";
 import NavigationSection from "./NavigationSection";
 import NavItem from "./NavItem";
+import NavButton from "./NavButton";
+import { toggleAddForm } from "../../../context/Slices/addFormSlice";
+import { useDispatch } from "react-redux";
 
 const Navigation = ({ onClose }) => {
-  console.log("rendered");
-
+  const dispatch = useDispatch();
   return (
     <div className="flex flex-col gap-2">
       {/* Main menu items */}
@@ -35,11 +37,13 @@ const Navigation = ({ onClose }) => {
           navItem="calendar"
           onClose={onClose}
         />
-        <NavItem
+        <NavButton
           icon={<FaPlus size={16} />}
           text="Add Task"
-          navItem="add"
-          onClose={onClose}
+          onClick={() => {
+            dispatch(toggleAddForm());
+            onClose();
+          }}
         />
       </NavigationSection>
 
@@ -89,23 +93,29 @@ const Navigation = ({ onClose }) => {
 
       {/* Other */}
       <NavigationSection title="Other">
-        <NavItem
+        <NavButton
           icon={<FaFilter size={16} />}
           text="Filters & Labels"
-          navItem="filters"
-          onClose={onClose}
+          onClick={() => {
+            console.log("Filters & Labels");
+            onClose();
+          }}
         />
-        <NavItem
+        <NavButton
           icon={<FaChartBar size={16} />}
           text="Analytics"
-          navItem="analytics"
-          onClose={onClose}
+          onClick={() => {
+            console.log("Analytics");
+            onClose();
+          }}
         />
-        <NavItem
+        <NavButton
           icon={<IoMdSettings size={16} />}
           text="Settings"
-          navItem="settings"
-          onClose={onClose}
+          onClick={() => {
+            console.log("Settings");
+            onClose();
+          }}
         />
       </NavigationSection>
     </div>

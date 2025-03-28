@@ -5,7 +5,7 @@ import { addTasks } from "../context/Slices/tasksSlice";
 import { FaRegCalendarAlt, FaRegFlag, FaTimes } from "react-icons/fa";
 import { MdClose, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { motion, AnimatePresence } from "framer-motion";
+import { closeAddForm } from "../context/Slices/addFormSlice";
 
 // Extracted suggestion list component
 const SuggestionList = memo(
@@ -46,6 +46,19 @@ SuggestionList.propTypes = {
 };
 
 // Extracted DatePicker component
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
 const DatePicker = memo(({ date, onDateChange }) => (
   <div className="mt-2 rounded-md border border-gray-300 p-3 dark:border-gray-700">
     <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
@@ -68,6 +81,20 @@ DatePicker.propTypes = {
 };
 
 // Extracted PriorityPicker component
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 const PriorityPicker = memo(
   ({ showPriorityPicker, onPrioritySelect, selectedPriority }) => {
     const priorityColors = {
@@ -78,38 +105,31 @@ const PriorityPicker = memo(
     };
 
     return (
-      <AnimatePresence>
-        {showPriorityPicker && (
-          <motion.div
-            initial={{ opacity: 0, y: -10 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: -10 }}
-            className="ring-opacity-5 absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none dark:bg-gray-800"
-          >
-            <div className="py-1">
-              {["High", "Medium", "Low"].map((priority) => (
-                <button
-                  key={priority}
-                  onClick={() => onPrioritySelect(priority)}
-                  className={`flex w-full items-center px-4 py-2 text-sm ${
-                    selectedPriority === priority
-                      ? "bg-indigo-50 text-indigo-900 dark:bg-indigo-900 dark:text-indigo-100"
-                      : "text-gray-700 dark:text-gray-300"
+      showPriorityPicker && (
+        <div className="ring-opacity-5 absolute right-0 mt-2 w-48 origin-top-right rounded-md bg-white shadow-lg ring-1 ring-black focus:outline-none dark:bg-gray-800">
+          <div className="py-1">
+            {["High", "Medium", "Low"].map((priority) => (
+              <button
+                key={priority}
+                onClick={() => onPrioritySelect(priority)}
+                className={`flex w-full items-center px-4 py-2 text-sm ${
+                  selectedPriority === priority
+                    ? "bg-indigo-50 text-indigo-900 dark:bg-indigo-900 dark:text-indigo-100"
+                    : "text-gray-700 dark:text-gray-300"
+                }`}
+              >
+                <span
+                  className={`mr-2 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
+                    priorityColors[priority]
                   }`}
                 >
-                  <span
-                    className={`mr-2 inline-block rounded-full px-2 py-0.5 text-xs font-medium ${
-                      priorityColors[priority]
-                    }`}
-                  >
-                    {priority}
-                  </span>
-                </button>
-              ))}
-            </div>
-          </motion.div>
-        )}
-      </AnimatePresence>
+                  {priority}
+                </span>
+              </button>
+            ))}
+          </div>
+        </div>
+      )
     );
   },
 );
@@ -123,8 +143,24 @@ PriorityPicker.propTypes = {
 };
 
 // Main component
-const AddTaskForm = memo(({ onClose }) => {
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+const AddTaskForm = memo(() => {
   const dispatch = useDispatch();
+  const isOpen = useSelector((state) => state.addForm.isOpen);
   const tasks = useSelector((state) => state.tasks);
   const inputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
@@ -393,9 +429,8 @@ const AddTaskForm = memo(({ onClose }) => {
           date: task.date || new Date().toISOString(),
         }),
       );
-      onClose();
     },
-    [inputValue, task, processInput, dispatch, onClose],
+    [inputValue, task, processInput, dispatch],
   );
 
   const getPriorityColor = () => {
@@ -413,38 +448,36 @@ const AddTaskForm = memo(({ onClose }) => {
   };
 
   return (
-    <div
-      className="fixed inset-0 z-50 overflow-y-auto"
-      aria-labelledby="modal-title"
-      role="dialog"
-      aria-modal="true"
-    >
-      <div className="flex min-h-screen items-center justify-center p-4 text-center sm:block sm:p-0">
-        <div
-          className="bg-opacity-75 fixed inset-0 bg-gray-500 transition-opacity"
-          aria-hidden="true"
-        ></div>
-
-        <div className="inline-block transform overflow-hidden rounded-lg bg-white text-left align-bottom shadow-xl transition-all sm:my-8 sm:w-full sm:max-w-lg sm:align-middle dark:bg-gray-800">
-          <form onSubmit={handleSubmit} className="space-y-4 p-6">
+    isOpen && (
+      <div
+        className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center overflow-y-auto bg-black/30 backdrop-blur-sm"
+        aria-labelledby="modal-title"
+        role="dialog"
+        aria-modal="true"
+      >
+        <div className="w-full max-w-lg transform rounded-xl bg-white p-6 shadow-2xl transition-all sm:my-8 dark:bg-gray-800">
+          <form onSubmit={handleSubmit} className="space-y-5">
             <div className="flex items-center justify-between">
-              <h3 className="text-lg leading-6 font-medium text-gray-900 dark:text-white">
+              <h3 className="text-xl font-semibold text-gray-900 dark:text-white">
                 Add New Task
               </h3>
               <button
                 type="button"
-                onClick={onClose}
-                className="rounded-md bg-transparent text-gray-400 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:text-gray-300 dark:hover:text-gray-200"
+                onClick={() => dispatch(closeAddForm())}
+                className="rounded-full p-1.5 text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:hover:bg-gray-700 dark:hover:text-gray-200"
               >
                 <MdClose className="h-6 w-6" />
               </button>
             </div>
 
-            {/* Smart input (with natural language processing) */}
+            {/* Smart input with natural language processing */}
             <div className="relative">
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Quick Add (use # for tags, + for people, &ldquo;in
-                Category&rdquo; for categories)
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Quick Add
+                <span className="ml-1 text-xs font-normal text-gray-500 dark:text-gray-400">
+                  (use # for tags, + for people, &quot;in Category&quot; for
+                  categories)
+                </span>
               </label>
               <input
                 ref={inputRef}
@@ -453,7 +486,7 @@ const AddTaskForm = memo(({ onClose }) => {
                 onChange={handleInputChange}
                 onKeyDown={handleKeyDown}
                 placeholder='Try "Buy milk #grocery +John in Shopping"'
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="focus:ring-opacity-30 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 shadow-sm transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               />
               {showSuggestions && (
                 <SuggestionList
@@ -467,7 +500,7 @@ const AddTaskForm = memo(({ onClose }) => {
 
             {/* Task input */}
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Task Description
               </label>
               <input
@@ -475,13 +508,13 @@ const AddTaskForm = memo(({ onClose }) => {
                 value={task.text}
                 onChange={(e) => updateTask("text", e.target.value)}
                 placeholder="What needs to be done?"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="focus:ring-opacity-30 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 shadow-sm transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               />
             </div>
 
             {/* Task category */}
             <div>
-              <label className="mb-1 block text-sm font-medium text-gray-700 dark:text-gray-300">
+              <label className="mb-1.5 block text-sm font-medium text-gray-700 dark:text-gray-300">
                 Category
               </label>
               <input
@@ -489,7 +522,7 @@ const AddTaskForm = memo(({ onClose }) => {
                 value={task.category}
                 onChange={(e) => updateTask("category", e.target.value)}
                 placeholder="Category"
-                className="block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+                className="focus:ring-opacity-30 block w-full rounded-lg border border-gray-300 bg-white px-4 py-2.5 shadow-sm transition-colors focus:border-indigo-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-white dark:placeholder-gray-400"
               />
             </div>
 
@@ -498,15 +531,15 @@ const AddTaskForm = memo(({ onClose }) => {
               {task.tags.map((tag) => (
                 <div
                   key={tag}
-                  className="flex items-center rounded-full bg-indigo-100 px-3 py-1 text-sm dark:bg-indigo-900"
+                  className="flex items-center rounded-full bg-indigo-100 px-3 py-1.5 text-sm transition-colors hover:bg-indigo-200 dark:bg-indigo-900 dark:hover:bg-indigo-800"
                 >
-                  <span className="text-indigo-800 dark:text-indigo-200">
+                  <span className="font-medium text-indigo-800 dark:text-indigo-200">
                     #{tag}
                   </span>
                   <button
                     type="button"
                     onClick={() => removeItem("tags", tag)}
-                    className="ml-1.5 text-indigo-400 hover:text-indigo-600 focus:outline-none dark:text-indigo-300 dark:hover:text-indigo-100"
+                    className="ml-1.5 rounded-full p-0.5 text-indigo-400 hover:bg-indigo-300 hover:text-indigo-700 focus:outline-none dark:text-indigo-300 dark:hover:bg-indigo-700 dark:hover:text-indigo-100"
                   >
                     <FaTimes className="h-3 w-3" />
                   </button>
@@ -516,15 +549,15 @@ const AddTaskForm = memo(({ onClose }) => {
               {task.partners.map((partner) => (
                 <div
                   key={partner}
-                  className="flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm dark:bg-purple-900"
+                  className="flex items-center rounded-full bg-purple-100 px-3 py-1.5 text-sm transition-colors hover:bg-purple-200 dark:bg-purple-900 dark:hover:bg-purple-800"
                 >
-                  <span className="text-purple-800 dark:text-purple-200">
+                  <span className="font-medium text-purple-800 dark:text-purple-200">
                     +{partner}
                   </span>
                   <button
                     type="button"
                     onClick={() => removeItem("partners", partner)}
-                    className="ml-1.5 text-purple-400 hover:text-purple-600 focus:outline-none dark:text-purple-300 dark:hover:text-purple-100"
+                    className="ml-1.5 rounded-full p-0.5 text-purple-400 hover:bg-purple-300 hover:text-purple-700 focus:outline-none dark:text-purple-300 dark:hover:bg-purple-700 dark:hover:text-purple-100"
                   >
                     <FaTimes className="h-3 w-3" />
                   </button>
@@ -533,25 +566,27 @@ const AddTaskForm = memo(({ onClose }) => {
             </div>
 
             {/* Quick action buttons */}
-            <div className="flex justify-between">
+            <div className="flex flex-wrap justify-between gap-3">
               {/* Left side buttons */}
-              <div className="flex space-x-2">
+              <div className="flex flex-wrap gap-2">
                 <button
                   type="button"
                   onClick={() => setShowDatePicker(!showDatePicker)}
-                  className="flex items-center rounded-md border border-gray-300 bg-white px-3 py-2 text-sm font-medium text-gray-700 hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-300 dark:hover:bg-gray-700"
+                  className="flex items-center rounded-lg border border-gray-300 bg-white px-4 py-2 text-sm font-medium text-gray-700 shadow-sm transition-colors hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 dark:bg-gray-700 dark:text-gray-300 dark:hover:bg-gray-600"
                 >
-                  <FaRegCalendarAlt className="mr-2" />
+                  <FaRegCalendarAlt className="mr-2 text-indigo-500 dark:text-indigo-400" />
                   {showDatePicker ? "Hide Date" : "Set Date"}
                 </button>
                 <div className="relative">
                   <button
                     type="button"
                     onClick={() => setShowPriorityPicker(!showPriorityPicker)}
-                    className={`flex items-center rounded-md border border-gray-300 px-3 py-2 text-sm font-medium hover:bg-gray-50 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-gray-700 dark:hover:bg-gray-700 ${getPriorityBgColor()}`}
+                    className={`hover:bg-opacity-80 dark:hover:bg-opacity-90 flex items-center rounded-lg border border-gray-300 px-4 py-2 text-sm font-medium shadow-sm transition-colors focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:border-gray-600 ${getPriorityBgColor()}`}
                   >
                     <FaRegFlag className={`mr-2 ${getPriorityColor()}`} />
-                    <span className={getPriorityColor()}>{task.priority}</span>
+                    <span className={`font-medium ${getPriorityColor()}`}>
+                      {task.priority}
+                    </span>
                     <IoIosArrowDown className="ml-2" />
                   </button>
                   <PriorityPicker
@@ -565,7 +600,7 @@ const AddTaskForm = memo(({ onClose }) => {
               {/* Right side - Add button */}
               <button
                 type="submit"
-                className="inline-flex items-center rounded-md border border-transparent bg-indigo-600 px-4 py-2 text-sm font-medium text-white shadow-sm hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:bg-indigo-700 dark:hover:bg-indigo-800"
+                className="inline-flex items-center rounded-lg bg-indigo-600 px-5 py-2 text-sm font-medium text-white shadow-md transition-colors hover:bg-indigo-700 focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2 focus:outline-none dark:bg-indigo-700 dark:hover:bg-indigo-800"
               >
                 <MdAdd className="mr-2 text-lg" />
                 Add Task
@@ -582,14 +617,10 @@ const AddTaskForm = memo(({ onClose }) => {
           </form>
         </div>
       </div>
-    </div>
+    )
   );
 });
 
 AddTaskForm.displayName = "AddTaskForm";
-
-AddTaskForm.propTypes = {
-  onClose: PropTypes.func.isRequired,
-};
 
 export default AddTaskForm;

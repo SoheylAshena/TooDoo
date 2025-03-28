@@ -1,32 +1,26 @@
-import TaskItem from "./TaskItem";
-import PropTypes from "prop-types";
-import { memo } from "react";
+import TaskItem from "./TaskItem/TaskItem";
+import { filteredData } from "../Utilities/filteredTasks";
+import { useSelector } from "react-redux";
+import Header from "./Header";
+import EmptyTasksMessage from "./EmptyTasksMessage";
 
-const TaskList = memo(
-  ({ filteredTasks, dispatch, toggleTask, deleteTasks }) => {
-    return (
+const TaskList = () => {
+  const tasks = useSelector((state) => state.tasks);
+  const filterOptions = useSelector((state) => state.filters);
+  const filteredTasks = filteredData(tasks, filterOptions);
+  return (
+    <>
+      <Header filterOptions={filterOptions} />
+      {filteredTasks.length === 0 && (
+        <EmptyTasksMessage filterOptions={filterOptions} />
+      )}
       <ul className="space-y-4">
         {filteredTasks.map((item) => (
-          <TaskItem
-            key={item.id}
-            task={item}
-            dispatch={dispatch}
-            toggleTask={toggleTask}
-            deleteTasks={deleteTasks}
-          />
+          <TaskItem key={item.id} task={item} />
         ))}
       </ul>
-    );
-  },
-);
-
-TaskList.displayName = "TaskList";
-
-TaskList.propTypes = {
-  filteredTasks: PropTypes.array.isRequired,
-  dispatch: PropTypes.func.isRequired,
-  toggleTask: PropTypes.func.isRequired,
-  deleteTasks: PropTypes.func.isRequired,
+    </>
+  );
 };
 
 export default TaskList;

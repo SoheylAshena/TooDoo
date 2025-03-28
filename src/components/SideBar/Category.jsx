@@ -112,7 +112,4 @@ Category.propTypes = {
   onClose: PropTypes.func,
 };
 
-Category.defaultProps = {
-  onClose: () => {},
-};
 export default Category;
