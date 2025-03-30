@@ -151,6 +151,8 @@ export const tasksSlice = createSlice({
       if (task) {
         task.completed = !task.completed;
         saveTasks(state);
+      } else {
+        console.error(`Task with ID ${action.payload} not found`);
       }
     },
     updateTask: (state, action) => {

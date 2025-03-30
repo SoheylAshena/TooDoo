@@ -1,30 +1,27 @@
-// Optimized filtering functions for tasks
-// Cache to store results of expensive calculations
+// Optimized filtering functions
 const cache = {
   filtered: new Map(),
   lastCall: null,
 };
 
-// Generate a cache key based on filter parameters and tasks array length
+// Generate a cache key
 const generateCacheKey = (tasks, filterOptions) => {
-  return `${tasks.length}_${JSON.stringify(filterOptions)}`;
+  const tasksStateHash = tasks
+    .map((task) => `${task.id}:${task.completed}`)
+    .join("|");
+  return `${tasksStateHash}_${JSON.stringify(filterOptions)}`;
 };
 
 export const filteredData = (tasks, filterOptions) => {
-  // Check if we have the same exact tasks and filters as the last call
   const cacheKey = generateCacheKey(tasks, filterOptions);
-
-  // Return cached result if available
   if (cache.filtered.has(cacheKey)) {
     return cache.filtered.get(cacheKey);
   }
 
   const { status, priority, time, search, category, sort } = filterOptions;
 
-  // Apply filters in sequence, starting with the most restrictive ones first
   let filtered = [...tasks];
 
-  // Handle search filter (most restrictive, apply first)
   if (search) {
     const lowercasedSearch = search.toLowerCase();
     filtered = filtered.filter(
@@ -110,7 +107,7 @@ export const filteredData = (tasks, filterOptions) => {
 
   // Keep cache size manageable
   if (cache.filtered.size > 100) {
-    // Remove oldest entries if cache gets too large
+    // Remove oldest entries if cache gets large
     const keyToDelete = cache.filtered.keys().next().value;
     cache.filtered.delete(keyToDelete);
   }

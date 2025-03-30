@@ -12,24 +12,21 @@ import { memo } from "react";
 
 const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
-  // Memoized handlers
-  const handleDeleteTask = () => dispatch(deleteTasks(task.id));
-  const handleToggleTask = () => dispatch(toggleTask(task.id));
 
   return (
     <li
-      className={`rounded-xl border border-gray-100 p-4 shadow-md transition-all duration-300 hover:translate-y-[-3px] hover:shadow-lg ${
+      className={`rounded-xl p-4 transition-all duration-300 hover:translate-y-[-3px] ${
         task.completed
-          ? "bg-gray-50 dark:border-gray-800 dark:bg-gray-900"
-          : "bg-white dark:border-gray-800 dark:bg-gray-900"
+          ? "border border-gray-200 bg-gray-100 shadow-sm dark:border-gray-700 dark:bg-gray-800"
+          : "border border-gray-100 bg-white shadow-md hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
       }`}
     >
       <div className="flex items-start gap-3">
         <div className="pt-1">
           <input
             type="checkbox"
+            onChange={() => dispatch(toggleTask(task.id))}
             checked={task.completed}
-            onChange={handleToggleTask}
             className="h-4.5 w-4.5 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-1 dark:border-indigo-600 dark:focus:ring-indigo-400"
           />
         </div>
@@ -58,7 +55,7 @@ const TaskItem = ({ task }) => {
 
           <div className="mt-3 flex items-center justify-end gap-2">
             <button
-              onClick={handleDeleteTask}
+              onClick={() => dispatch(deleteTasks(task.id))}
               className="rounded-md p-1 text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900 dark:hover:text-red-400"
               aria-label="Delete task"
             >

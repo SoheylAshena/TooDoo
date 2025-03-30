@@ -21,9 +21,7 @@ TooDoo is a high-performance, responsive task management application built with 
 
 - **React**: UI built with React 18 using functional components and hooks
 - **Redux**: State management with Redux Toolkit
-- **Code Splitting**: Lazy-loaded components for better performance
 - **Tailwind CSS**: Utility-first CSS framework for styling
-- **Framer Motion**: Smooth animations for an enhanced user experience
 - **Optimized Rerenders**: Components are memoized to minimize unnecessary rerenders
 - **Modular Architecture**: Code is organized into reusable, maintainable components
 
@@ -96,10 +94,6 @@ src/
 ## Contributing
 
 Contributions are welcome! Please feel free to submit a Pull Request.
-
-## License
-
-This project is licensed under the MIT License - see the LICENSE file for details.
 
 ## Acknowledgments
 
