@@ -1,6 +1,5 @@
-import { MdDelete, MdEdit } from "react-icons/md";
+import { MdDelete, MdEdit, MdExpandMore, MdExpandLess } from "react-icons/md";
 import PropTypes from "prop-types";
-import getPriorityBadge from "../../Utilities/getPeriorityBadge";
 import TagsList from "./TagsList";
 import TaskText from "./TaskText";
 import CategoryLabel from "./CategoryLabel";
@@ -8,10 +7,16 @@ import DateLabel from "./DateLabel";
 import PartnersList from "./PartnersList";
 import { useDispatch } from "react-redux";
 import { deleteTasks, toggleTask } from "../../context/Slices/tasksSlice";
-import { memo } from "react";
+import { memo, useState } from "react";
 
 const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
+  const [showDetails, setShowDetails] = useState(false);
+
+  const toggleDetails = (e) => {
+    e.stopPropagation();
+    setShowDetails(!showDetails);
+  };
 
   return (
     <li
@@ -21,53 +26,88 @@ const TaskItem = ({ task }) => {
           : "border border-gray-100 bg-white shadow-md hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
       }`}
     >
-      <div className="flex items-start gap-3">
-        <div className="pt-1">
-          <input
-            type="checkbox"
-            onChange={() => dispatch(toggleTask(task.id))}
-            checked={task.completed}
-            className="h-4.5 w-4.5 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500 focus:ring-offset-1 dark:border-indigo-600 dark:focus:ring-indigo-400"
-          />
-        </div>
-
+      <div className="flex items-center gap-3">
         <div className="min-w-0 flex-1 overflow-hidden">
-          <div className="flex flex-wrap items-center gap-2">
-            <TaskText text={task.text} completed={task.completed} />
-            <div className="flex-shrink-0">
-              {getPriorityBadge(task.priority)}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={(e) => {
+                e.stopPropagation();
+                dispatch(toggleTask(task.id));
+              }}
+              className={`mr-3 flex h-5 w-5 items-center justify-center rounded-full border-2 ${
+                task.completed
+                  ? "border-indigo-500 bg-indigo-500 dark:border-indigo-400 dark:bg-indigo-400"
+                  : "border-indigo-300 dark:border-indigo-600"
+              } transition-colors duration-200 hover:border-indigo-500 dark:hover:border-indigo-400`}
+              aria-label={
+                task.completed ? "Mark as incomplete" : "Mark as complete"
+              }
+            >
+              {task.completed && (
+                <span className="h-2 w-2 rounded-full bg-white dark:bg-gray-900"></span>
+              )}
+            </button>
+            <div className="flex flex-1 items-center gap-2">
+              <TaskText text={task.text} completed={task.completed} />
+              <div
+                className="ml-2 h-2 w-2 flex-shrink-0 rounded-full"
+                style={{
+                  backgroundColor:
+                    task.priority === "High"
+                      ? "#ef4444"
+                      : task.priority === "Medium"
+                        ? "#f59e0b"
+                        : "#10b981",
+                }}
+              ></div>
             </div>
+            <button
+              onClick={toggleDetails}
+              className="ml-2 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
+              aria-label={showDetails ? "Hide details" : "Show details"}
+            >
+              {showDetails ? (
+                <MdExpandLess className="text-gray-500" />
+              ) : (
+                <MdExpandMore className="text-gray-500" />
+              )}
+            </button>
           </div>
 
-          <div className="mt-2">
-            <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-500 dark:text-gray-400">
-              <CategoryLabel category={task.category} />
-              <DateLabel date={task.date} />
-            </div>
-
-            {(task.tags?.length > 0 || task.partners?.length > 0) && (
-              <div className="mt-2 flex flex-wrap items-center gap-1.5">
-                <TagsList tags={task.tags} />
-                <PartnersList partners={task.partners} />
+          {showDetails && (
+            <div className="mt-3 border-t border-gray-100 pt-3 dark:border-gray-800">
+              <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-500 dark:text-gray-400">
+                <CategoryLabel category={task.category} />
+                <DateLabel date={task.date} />
               </div>
-            )}
-          </div>
 
-          <div className="mt-3 flex items-center justify-end gap-2">
-            <button
-              onClick={() => dispatch(deleteTasks(task.id))}
-              className="rounded-md p-1 text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900 dark:hover:text-red-400"
-              aria-label="Delete task"
-            >
-              <MdDelete className="text-lg" />
-            </button>
-            <button
-              className="rounded-md p-1 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-900 dark:hover:text-indigo-400"
-              aria-label="Edit task"
-            >
-              <MdEdit className="text-lg" />
-            </button>
-          </div>
+              {(task.tags?.length > 0 || task.partners?.length > 0) && (
+                <div className="mt-2 flex flex-wrap items-center gap-1.5">
+                  <TagsList tags={task.tags} />
+                  <PartnersList partners={task.partners} />
+                </div>
+              )}
+
+              <div className="mt-3 flex items-center justify-end gap-2">
+                <button
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    dispatch(deleteTasks(task.id));
+                  }}
+                  className="rounded-md p-1 text-red-500 hover:bg-red-50 hover:text-red-600 dark:hover:bg-red-900 dark:hover:text-red-400"
+                  aria-label="Delete task"
+                >
+                  <MdDelete className="text-lg" />
+                </button>
+                <button
+                  className="rounded-md p-1 text-indigo-500 hover:bg-indigo-50 hover:text-indigo-600 dark:hover:bg-indigo-900 dark:hover:text-indigo-400"
+                  aria-label="Edit task"
+                >
+                  <MdEdit className="text-lg" />
+                </button>
+              </div>
+            </div>
+          )}
         </div>
       </div>
     </li>

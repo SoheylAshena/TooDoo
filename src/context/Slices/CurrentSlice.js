@@ -34,12 +34,12 @@ const currentSlice = createSlice({
           currentFilters.priority === config.priority &&
           currentFilters.time === config.time;
 
-        if (isMatch && state !== configCase) {
+        if (isMatch) {
           return configCase;
         }
       }
 
-      return state;
+      return "";
     },
   },
 });
