@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { addTasks } from "../context/Slices/tasksSlice";
+import { updateTask } from "../context/Slices/tasksSlice";
 import PropTypes from "prop-types";
 
 const CustomDropdown = ({
@@ -107,18 +107,9 @@ CustomDropdown.defaultProps = {
   onAddNew: null,
 };
 
-const AddForm = ({ onClose }) => {
+const EditForm = ({ task, setEditing }) => {
   const dispatch = useDispatch();
-  const [formData, setFormData] = useState({
-    text: "",
-    category: "Personal",
-    tags: [],
-    partners: [],
-    date: new Date(new Date().setDate(new Date().getDate() + 1))
-      .toISOString()
-      .split("T")[0],
-    priority: "Medium",
-  });
+  const [formData, setFormData] = useState({ ...task });
 
   const [tagInput, setTagInput] = useState("");
   const [partnerInput, setPartnerInput] = useState([]);
@@ -193,31 +184,19 @@ const AddForm = ({ onClose }) => {
   const handleSubmit = (e) => {
     e.preventDefault();
     if (validate()) {
-      dispatch(addTasks(formData));
-      setFormData({
-        text: "",
-        category: "Personal",
-        tags: [],
-        partners: [],
-        date: new Date(new Date().setDate(new Date().getDate() + 1))
-          .toISOString()
-          .split("T")[0],
-        priority: "Medium",
-      });
-      setTagInput("");
-      setPartnerInput("");
-      onClose();
+      dispatch(updateTask(formData));
+      setEditing(false);
     }
   };
-
+  console.log(formData.date);
   return (
     <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black/40">
       <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white p-8 shadow-xl">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-700">Create New Task</h2>
+          <h2 className="text-2xl font-bold text-gray-700">Edit Task</h2>
           <button
             type="button"
-            onClick={onClose}
+            onClick={() => setEditing(false)}
             className="text-gray-400 hover:text-gray-600 focus:outline-none"
           >
             <svg
@@ -388,11 +367,11 @@ const AddForm = ({ onClose }) => {
               type="submit"
               className="flex-1 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-medium text-white shadow-md transition-all hover:from-blue-600 hover:to-purple-600 hover:shadow-lg focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 focus:outline-none"
             >
-              Create Task
+              Submit{" "}
             </button>
             <button
               type="button"
-              onClick={onClose}
+              onClick={() => setEditing(false)}
               className="flex-1 rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-700 shadow-md transition-all hover:bg-gray-200 hover:shadow-lg focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:outline-none"
             >
               Cancel
@@ -404,8 +383,9 @@ const AddForm = ({ onClose }) => {
   );
 };
 
-AddForm.propTypes = {
-  onClose: PropTypes.func.isRequired,
+EditForm.propTypes = {
+  setEditing: PropTypes.func.isRequired,
+  task: PropTypes.object.isRequired,
 };
 
-export default AddForm;
+export default EditForm;

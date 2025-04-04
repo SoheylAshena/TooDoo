@@ -1,23 +1,4 @@
-// Optimized filtering functions
-const cache = {
-  filtered: new Map(),
-  lastCall: null,
-};
-
-// Generate a cache key
-const generateCacheKey = (tasks, filterOptions) => {
-  const tasksStateHash = tasks
-    .map((task) => `${task.id}:${task.completed}`)
-    .join("|");
-  return `${tasksStateHash}_${JSON.stringify(filterOptions)}`;
-};
-
 export const filteredData = (tasks, filterOptions) => {
-  const cacheKey = generateCacheKey(tasks, filterOptions);
-  if (cache.filtered.has(cacheKey)) {
-    return cache.filtered.get(cacheKey);
-  }
-
   const { status, priority, time, search, category, sort } = filterOptions;
 
   let filtered = [...tasks];
@@ -88,9 +69,9 @@ export const filteredData = (tasks, filterOptions) => {
 
   // Apply sorting
   if (sort === "date-asc") {
-    filtered.sort((a, b) => new Date(a.date) - new Date(b.date));
+    filtered.sort((a, b) => new Date(a.createdAt) - new Date(b.createdAt));
   } else if (sort === "date-desc") {
-    filtered.sort((a, b) => new Date(b.date) - new Date(a.date));
+    filtered.sort((a, b) => new Date(b.createdAt) - new Date(a.createdAt));
   } else if (sort === "priority") {
     const priorityValues = { high: 3, medium: 2, low: 1 };
     filtered.sort((a, b) => {
@@ -100,16 +81,6 @@ export const filteredData = (tasks, filterOptions) => {
         priorityValues[(b.priority || "medium").toLowerCase()] || 0;
       return bValue - aValue;
     });
-  }
-
-  // Cache the result
-  cache.filtered.set(cacheKey, filtered);
-
-  // Keep cache size manageable
-  if (cache.filtered.size > 100) {
-    // Remove oldest entries if cache gets large
-    const keyToDelete = cache.filtered.keys().next().value;
-    cache.filtered.delete(keyToDelete);
   }
 
   return filtered;

@@ -134,7 +134,7 @@ export const tasksSlice = createSlice({
         tags: action.payload.tags || [],
         partners: action.payload.partners || [],
         completed: false,
-        date: new Date(action.payload.date).toISOString(),
+        date: new Date(action.payload.date).toISOString().split("T")[0],
         priority: action.payload.priority || "Medium",
         createdAt: new Date().toISOString(),
       };
@@ -156,25 +156,14 @@ export const tasksSlice = createSlice({
       }
     },
     updateTask: (state, action) => {
-      const { id, updatedTask } = action.payload;
-      const index = state.findIndex((task) => task.id === id);
-      if (index !== -1) {
-        const existingTask = state[index];
-        state[index] = {
-          ...existingTask,
-          text: updatedTask.text || existingTask.text,
-          category: updatedTask.category || existingTask.category,
-          tags: updatedTask.tags || existingTask.tags,
-          partners: updatedTask.partners || existingTask.partners,
-          completed: updatedTask.completed ?? existingTask.completed,
-          date: updatedTask.date
-            ? new Date(updatedTask.date).toISOString()
-            : existingTask.date,
-          priority: updatedTask.priority || existingTask.priority,
-        };
+      const updatedTask = action.payload;
+      const task = state.find((t) => t.id === updatedTask.id);
+      if (task) {
+        Object.assign(task, updatedTask);
         saveTasks(state);
       }
     },
+
     // Batch updates for better performance
     batchUpdateTasks: (state, action) => {
       const { updates } = action.payload;
