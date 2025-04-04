@@ -49,69 +49,37 @@ SuggestionList.propTypes = {
 };
 
 // Improved DatePicker component with separate date and time inputs
-const DatePicker = ({
-  date,
-  onDateChange,
-  time,
-  onTimeChange,
-  hasTime,
-  onToggleTime,
-}) => (
-  <div className="dark:bg-gray-850 mt-2 rounded-md border border-gray-300 bg-gray-50 p-4 dark:border-gray-700">
-    <div className="mb-2 flex items-center justify-between">
-      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-        Due Date & Time
-      </label>
-      <div className="flex items-center">
-        <input
-          type="checkbox"
-          id="includeTime"
-          checked={hasTime}
-          onChange={() => onToggleTime()}
-          className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
-        />
-        <label
-          htmlFor="includeTime"
-          className="ml-2 text-sm text-gray-600 dark:text-gray-400"
-        >
-          Include time
+const DatePicker = ({ updateTask, task }) => {
+  return (
+    <div className="mt-1 rounded-md border border-gray-300 bg-gray-50 p-2 dark:border-gray-700 dark:bg-gray-800">
+      <div className="mb-1 flex items-center justify-between">
+        <label className="block text-xs font-medium text-gray-700 dark:text-gray-300">
+          Due Date
         </label>
       </div>
-    </div>
 
-    <div className="flex gap-3">
-      <div className="w-full">
-        <input
-          type="date"
-          value={date}
-          onChange={(e) => onDateChange(e.target.value)}
-          className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
-        />
-      </div>
-
-      {hasTime && (
+      <div className="flex gap-2">
         <div className="w-full">
           <input
-            type="time"
-            value={time}
-            onChange={(e) => onTimeChange(e.target.value)}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm dark:border-gray-700 dark:bg-gray-800 dark:text-white"
+            type="date"
+            value={task.date}
+            onChange={(e) => {
+              updateTask("date", e.target.value);
+              console.log(e.target.value);
+            }}
+            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-xs dark:border-gray-700 dark:bg-gray-800 dark:text-white"
           />
         </div>
-      )}
+      </div>
     </div>
-  </div>
-);
+  );
+};
 
 DatePicker.displayName = "DatePicker";
 
 DatePicker.propTypes = {
-  date: PropTypes.string.isRequired,
-  onDateChange: PropTypes.func.isRequired,
-  time: PropTypes.string.isRequired,
-  onTimeChange: PropTypes.func.isRequired,
-  hasTime: PropTypes.bool.isRequired,
-  onToggleTime: PropTypes.func.isRequired,
+  updateTask: PropTypes.func.isRequired,
+  task: PropTypes.object.isRequired,
 };
 
 // Extracted PriorityPicker component
@@ -188,6 +156,7 @@ const AddTaskForm = () => {
   const inputRef = useRef(null);
   const [inputValue, setInputValue] = useState("");
   const [showPriorityPicker, setShowPriorityPicker] = useState(false);
+  const todayDate = new Date().toISOString().split("T")[0];
 
   // Split date and time for better control
 
@@ -197,7 +166,7 @@ const AddTaskForm = () => {
     tags: [],
     partners: [],
     priority: "Medium",
-    date: null,
+    date: todayDate,
   });
 
   // Get unique categories, tags, and partners for suggestions
@@ -249,7 +218,7 @@ const AddTaskForm = () => {
         partners: [],
         category: "Personal",
         priority: "Medium",
-        date: null,
+        date: todayDate,
       });
       setInputValue("");
     }
@@ -385,10 +354,10 @@ const AddTaskForm = () => {
 
   return (
     isOpen && (
-      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/30 backdrop-blur-sm">
+      <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6 backdrop-blur-md">
         <form
           onSubmit={handleSubmit}
-          className="relative space-y-5 rounded-lg bg-white shadow-lg dark:bg-gray-800"
+          className="relative space-y-6 rounded-lg bg-white p-6 shadow-xl dark:bg-gray-700 dark:shadow-xl dark:shadow-gray-900"
         >
           <button
             type="button"
@@ -400,7 +369,7 @@ const AddTaskForm = () => {
                 tags: [],
                 partners: [],
                 priority: "Medium",
-                date: null,
+                date: todayDate,
               });
             }}
             className="absolute top-2 right-2 z-10 rounded-full text-gray-400 transition-colors hover:bg-gray-100 hover:text-gray-500 focus:ring-2 focus:ring-indigo-500 focus:outline-none dark:hover:bg-gray-700 dark:hover:text-gray-200"
@@ -416,8 +385,9 @@ const AddTaskForm = () => {
             onChange={handleInputChange}
             onKeyDown={handleKeyDown}
             placeholder='Try "Buy milk #grocery +John"'
-            className="block w-full bg-transparent px-4 py-2 transition-colors focus:outline-none dark:text-white dark:placeholder-gray-400"
+            className="block w-full rounded-md bg-transparent transition-colors focus:outline-none dark:text-white dark:placeholder-gray-400"
           />
+
           {showSuggestions && (
             <SuggestionList
               suggestions={suggestions}
@@ -500,6 +470,8 @@ const AddTaskForm = () => {
               />
             </div>
           </div>
+
+          <DatePicker task={task} updateTask={updateTask} />
 
           {/* Add Task button */}
           <div className="flex justify-end pt-2">
