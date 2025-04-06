@@ -357,7 +357,7 @@ const AddTaskForm = () => {
       <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 p-6 backdrop-blur-md">
         <form
           onSubmit={handleSubmit}
-          className="relative space-y-6 rounded-lg bg-white p-6 shadow-xl dark:bg-gray-700 dark:shadow-xl dark:shadow-gray-900"
+          className="relative w-96 space-y-6 rounded-lg bg-white p-6 shadow-xl md:w-auto dark:bg-gray-700 dark:shadow-xl dark:shadow-gray-900"
         >
           <button
             type="button"

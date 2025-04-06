@@ -36,6 +36,14 @@
   }
 }
 
+.scrollbar-none::-webkit-scrollbar {
+  display: none; /* Hide scrollbar for Chrome, Safari and Opera */
+}
+.scrollbar-none {
+  -ms-overflow-style: none; /* Hide scrollbar for Internet Explorer and Edge */
+  scrollbar-width: none; /* Hide scrollbar for Firefox */
+}
+
 /* Scrollbar styling */
 .custom-scrollbar {
   scrollbar-width: thin; /* Firefox */

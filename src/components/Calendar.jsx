@@ -5,13 +5,12 @@ import {
   IoChevronForwardOutline,
   IoClose,
 } from "react-icons/io5";
-import { filteredData } from "../Utilities/filteredTasks";
 import { useDispatch } from "react-redux";
 import { toggleTask } from "../context/Slices/tasksSlice";
 import PropTypes from "prop-types";
 
 // Day Cell component to prevent re-renders of the entire calendar
-const DayCell = memo(({ day, tasks, currentDate, dispatch, onDayClick }) => {
+const DayCell = memo(({ day, tasks, currentDate, onDayClick }) => {
   if (day === null) {
     return (
       <div className="min-h-[120px] bg-gray-50 p-2 opacity-50 dark:bg-gray-800" />
@@ -49,46 +48,10 @@ const DayCell = memo(({ day, tasks, currentDate, dispatch, onDayClick }) => {
       </div>
 
       {/* Tasks preview - only show up to 3 */}
-      <div className="max-h-[80px] space-y-1.5 overflow-y-auto">
-        {tasks?.slice(0, 3).map((task) => (
-          <div
-            key={task.id}
-            className={`rounded-lg ${
-              task.completed
-                ? "border-gray-200 bg-gray-50 dark:border-gray-700 dark:bg-gray-800"
-                : task.priority === "High"
-                  ? "border-red-200 bg-red-50 dark:border-red-800 dark:bg-red-950"
-                  : task.priority === "Low"
-                    ? "border-green-200 bg-green-50 dark:border-green-800 dark:bg-green-950"
-                    : "border-yellow-200 bg-yellow-50 dark:border-yellow-800 dark:bg-yellow-950"
-            } border p-1.5 text-xs`}
-            onClick={(e) => e.stopPropagation()}
-          >
-            <div className="flex items-center gap-1.5">
-              <input
-                type="checkbox"
-                checked={task.completed}
-                onChange={(e) => {
-                  e.stopPropagation();
-                  dispatch(toggleTask(task.id));
-                }}
-                className="h-3 w-3 rounded-full border-2 border-indigo-300 text-indigo-600 focus:ring-indigo-500 dark:border-indigo-500 dark:focus:ring-indigo-400"
-              />
-              <div
-                className={`truncate font-medium ${
-                  task.completed
-                    ? "text-gray-400 line-through dark:text-gray-500"
-                    : "text-gray-800 dark:text-gray-200"
-                }`}
-              >
-                {task.text}
-              </div>
-            </div>
-          </div>
-        ))}
-        {tasks && tasks.length > 3 && (
+      <div className="scrollbar-none max-h-[80px] space-y-1.5 overflow-hidden">
+        {tasks && tasks.length > 0 && (
           <div className="text-center text-xs font-medium text-indigo-600 dark:text-indigo-400">
-            +{tasks.length - 3} more
+            {tasks.length} Tasks
           </div>
         )}
       </div>
@@ -274,16 +237,9 @@ TaskDetailsModal.propTypes = {
 const Calendar = () => {
   const dispatch = useDispatch();
   const tasks = useSelector((state) => state.tasks);
-  const filters = useSelector((state) => state.filters);
   const [currentDate, setCurrentDate] = useState(new Date());
   const [selectedDay, setSelectedDay] = useState(null);
   const [dayTasks, setDayTasks] = useState([]);
-
-  // Get filtered tasks once using useMemo
-  const filteredTasks = useMemo(
-    () => filteredData(tasks, filters),
-    [tasks, filters],
-  );
 
   // Create an array of day cells for the current month
   const dayCells = useMemo(() => {
@@ -291,18 +247,18 @@ const Calendar = () => {
       currentDate.getFullYear(),
       currentDate.getMonth() + 1,
       0,
-    ).getDate();
+    ).getDate(); //example: 30 for April
 
     const firstDayOfMonth = new Date(
       currentDate.getFullYear(),
       currentDate.getMonth(),
       1,
-    ).getDay();
+    ).getDay(); //example: 0 for Sunday
 
     // Group tasks by day
     const tasksByDay = {};
 
-    filteredTasks.forEach((task) => {
+    tasks.forEach((task) => {
       const taskDate = new Date(task.date);
       if (
         taskDate.getMonth() === currentDate.getMonth() &&
@@ -341,7 +297,7 @@ const Calendar = () => {
     }
 
     return cells;
-  }, [currentDate, filteredTasks]);
+  }, [currentDate, tasks]);
 
   const goToPreviousMonth = () => {
     setCurrentDate(

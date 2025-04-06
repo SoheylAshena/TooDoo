@@ -3,7 +3,6 @@ import tasksReducer from "./Slices/tasksSlice";
 import filtersReducer from "./Slices/filtersSlice";
 import currentReducer from "./Slices/CurrentSlice";
 import addFormReducer from "./Slices/addFormSlice";
-import editFormReducer from "./Slices/editFormSlice";
 
 export const store = configureStore({
   reducer: {
@@ -11,6 +10,5 @@ export const store = configureStore({
     filters: filtersReducer,
     current: currentReducer,
     addForm: addFormReducer,
-    editForm: editFormReducer,
   },
 });

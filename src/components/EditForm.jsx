@@ -191,7 +191,7 @@ const EditForm = ({ task, setEditing }) => {
   console.log(formData.date);
   return (
     <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="w-full max-w-2xl overflow-hidden rounded-2xl bg-white p-8 shadow-xl">
+      <div className="max-h-[70%] w-[90%] max-w-2xl overflow-auto rounded-2xl bg-white p-6 shadow-xl">
         <div className="mb-6 flex items-center justify-between">
           <h2 className="text-2xl font-bold text-gray-700">Edit Task</h2>
           <button
