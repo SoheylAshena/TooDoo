@@ -6,7 +6,7 @@ import AddTaskForm from "./components/AddTaskForm";
 function App() {
   return (
     <Provider store={store}>
-      <div className="mx-auto h-screen w-full max-w-[1600px] overflow-hidden">
+      <div className="mx-auto flex h-screen w-full">
         <SideBar />
         <MainBody />
         <AddTaskForm />
