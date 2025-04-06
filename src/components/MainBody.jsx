@@ -6,7 +6,7 @@ const MainBody = () => {
   const currentView = useSelector((state) => state.current);
 
   return (
-    <div className="custom-scrollbar min-h-screen w-full overflow-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 dark:from-indigo-900 dark:via-gray-900 dark:to-purple-900">
+    <div className="custom-scrollbar min-h-screen w-full overflow-auto bg-gradient-to-br from-indigo-50 via-white to-purple-50 p-4 pt-14 dark:from-indigo-900 dark:via-gray-900 dark:to-purple-900">
       <div className="mx-auto max-w-4xl">
         {currentView === "calendar" ? <Calendar /> : <TaskList />}
       </div>

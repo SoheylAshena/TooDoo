@@ -24,18 +24,18 @@ const Category = ({ onClose }) => {
 
   return (
     <div className="flex flex-1 flex-col">
-      <div className="mb-8 flex items-center justify-between">
-        <h2 className="text-2xl font-bold tracking-tight text-gray-800 dark:text-gray-200">
+      <div className="mb-6">
+        <h2 className="text-xl font-semibold text-gray-800 dark:text-gray-100">
           Categories
         </h2>
       </div>
 
-      <div className="flex flex-col gap-6">
+      <div className="flex flex-col gap-4">
         {categories.length > 0 ? (
           categories.map((cat) => (
             <div
               key={cat}
-              className="flex flex-col gap-3 rounded-xl border border-gray-100 bg-white p-4 shadow-sm transition-all duration-300 hover:shadow-md dark:border-gray-800 dark:bg-gray-900 dark:shadow-gray-800"
+              className="flex flex-col gap-2 rounded-lg border border-gray-200 p-4 transition-shadow hover:shadow-md dark:border-gray-700 dark:bg-gray-800"
             >
               <h3
                 onClick={() => {
@@ -53,10 +53,10 @@ const Category = ({ onClose }) => {
                   );
                   onClose();
                 }}
-                className="flex items-center text-lg font-semibold text-gray-800 dark:text-gray-200"
+                className="cursor-pointer text-base font-medium text-gray-800 hover:text-blue-500 dark:text-gray-100 dark:hover:text-blue-400"
               >
                 <span
-                  className="mr-2 h-2 w-2 rounded-full"
+                  className="mr-2 inline-block h-2 w-2 rounded-full"
                   style={{ backgroundColor: stringToColor(cat) }}
                 ></span>
                 {cat}
@@ -68,7 +68,7 @@ const Category = ({ onClose }) => {
                     style={{
                       backgroundColor: stringToColor(tag),
                     }}
-                    className="rounded-full bg-gray-50 px-3.5 py-1.5 backdrop-blur-sm transition-colors duration-200 hover:bg-gray-100 dark:bg-gray-800 dark:hover:bg-gray-700"
+                    className="rounded-full px-3 py-1 text-xs font-medium text-white transition-opacity hover:opacity-80 dark:text-gray-900"
                     onClick={() => {
                       dispatch(
                         setFilters({
@@ -85,21 +85,16 @@ const Category = ({ onClose }) => {
                       onClose();
                     }}
                   >
-                    <span className="text-sm font-bold text-white dark:text-gray-800">
-                      #{tag}
-                    </span>
+                    #{tag}
                   </li>
                 ))}
               </ul>
             </div>
           ))
         ) : (
-          <div className="flex flex-col items-center justify-center rounded-xl border border-gray-100 bg-gray-50 p-8 dark:border-gray-800 dark:bg-gray-900">
-            <p className="mb-2 text-gray-500 dark:text-gray-400">
-              No categories yet
-            </p>
-            <p className="text-sm text-gray-400 dark:text-gray-500">
-              Add tasks with categories to see them here
+          <div className="flex flex-col items-center justify-center rounded-lg border border-gray-200 p-6 text-center dark:border-gray-700 dark:bg-gray-800">
+            <p className="text-sm text-gray-500 dark:text-gray-400">
+              No categories yet. Add tasks with categories to see them here.
             </p>
           </div>
         )}
