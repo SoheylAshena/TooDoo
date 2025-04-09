@@ -1,14 +1,32 @@
-import { useState } from "react";
+import { useState, useLayoutEffect } from "react";
 import { MdOutlineDarkMode, MdOutlineLightMode } from "react-icons/md";
 import { FiLogOut, FiUser } from "react-icons/fi";
 import { IoMdNotificationsOutline } from "react-icons/io";
 
 const Profile = () => {
-  const [isDarkMode, setIsDarkMode] = useState(false);
   const [showMenu, setShowMenu] = useState(false);
-
   const toggleMenu = () => {
     setShowMenu(!showMenu);
+  };
+
+  const [isDarkMode, setIsDarkMode] = useState(
+    () => localStorage.getItem("dark") === "true",
+  );
+
+  // Synchronously apply dark mode before paint
+  useLayoutEffect(() => {
+    if (isDarkMode) {
+      document.documentElement.classList.add("dark");
+    } else {
+      document.documentElement.classList.remove("dark");
+    }
+  }, [isDarkMode]);
+
+  // Toggle dark mode: update state and localStorage.
+  const toggleDarkMode = () => {
+    const newMode = !isDarkMode;
+    setIsDarkMode(newMode);
+    localStorage.setItem("dark", newMode);
   };
 
   return (
@@ -33,10 +51,7 @@ const Profile = () => {
 
         <div className="flex items-center gap-1">
           <button
-            onClick={() => {
-              document.documentElement.classList.toggle("dark");
-              setIsDarkMode(!isDarkMode);
-            }}
+            onClick={toggleDarkMode}
             className="rounded-full p-2 text-gray-500 hover:bg-gray-100 dark:text-gray-400 dark:hover:bg-gray-800"
           >
             {isDarkMode ? (
@@ -63,7 +78,6 @@ const Profile = () => {
         </div>
       </div>
 
-      {/* User menu dropdown */}
       {showMenu && (
         <div className="absolute top-10 right-0 z-10 mt-2 w-48 origin-top-right rounded-xl bg-white py-1 shadow-lg ring-1 ring-gray-200 dark:bg-gray-900 dark:ring-gray-800">
           <div className="border-b border-gray-100 px-4 py-2 dark:border-gray-800">
@@ -98,7 +112,6 @@ const Profile = () => {
         </div>
       )}
 
-      {/* App name & version */}
       <div className="mt-4 flex items-center justify-between border-b border-gray-200 pb-4 dark:border-gray-800">
         <div>
           <h1 className="text-xl font-bold text-indigo-700 dark:text-indigo-300">
