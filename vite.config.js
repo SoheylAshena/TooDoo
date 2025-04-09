@@ -4,7 +4,7 @@ import tailwindcss from "@tailwindcss/vite";
 import { VitePWA } from "vite-plugin-pwa";
 
 export default defineConfig({
-  base: "./",
+  base: "/TooDoo/",
   plugins: [
     react(),
     tailwindcss(),
@@ -19,8 +19,8 @@ export default defineConfig({
         name: "TooDoo | Task manager and to-do list",
         short_name: "TooDoo",
         description: "An advanced task manager web app",
-        start_url: "/",
-        scope: "/",
+        start_url: "/TooDoo/",
+        scope: "/TooDoo/",
         display: "standalone",
         theme_color: "#432dd7",
         background_color: "#432dd7",
