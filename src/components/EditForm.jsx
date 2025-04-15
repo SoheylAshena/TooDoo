@@ -21,19 +21,19 @@ const CustomDropdown = ({
 
   return (
     <div className="relative" ref={dropdownRef}>
-      <label className="mb-2 block text-sm font-medium text-gray-600">
+      <label className="mb-2 block text-sm font-medium text-gray-600 dark:text-gray-300">
         {label}
       </label>
       <div className="relative">
         <button
           type="button"
           onClick={() => setIsOpen(!isOpen)}
-          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none"
+          className="w-full rounded-lg border border-gray-200 bg-white px-4 py-3 text-left text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:focus:border-blue-500"
         >
           <span className="block truncate">{value || placeholder}</span>
           <span className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-2">
             <svg
-              className="h-5 w-5 text-gray-400"
+              className="h-5 w-5 text-gray-400 dark:text-gray-300"
               viewBox="0 0 20 20"
               fill="currentColor"
             >
@@ -47,14 +47,14 @@ const CustomDropdown = ({
         </button>
 
         {isOpen && (
-          <div className="ring-opacity-5 absolute z-10 mt-1 w-full rounded-lg bg-white shadow-lg">
+          <div className="ring-opacity-5 absolute z-10 mt-1 w-full rounded-lg bg-white shadow-lg dark:bg-gray-800">
             {label === "Category" && (
               <div className="p-2">
                 <input
                   type="text"
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none"
+                  className="w-full rounded-md border border-gray-200 px-3 py-2 text-sm focus:border-blue-400 focus:ring-1 focus:ring-blue-400 focus:outline-none dark:border-gray-700 dark:bg-gray-700 dark:text-gray-200 dark:focus:border-blue-500"
                   placeholder="Add a category..."
                 />
               </div>
@@ -63,7 +63,7 @@ const CustomDropdown = ({
               {filteredOptions.map((option) => (
                 <li
                   key={option}
-                  className="cursor-pointer px-4 py-2 text-gray-700 hover:bg-blue-50"
+                  className="cursor-pointer px-4 py-2 text-gray-700 hover:bg-blue-50 dark:text-gray-200 dark:hover:bg-blue-900"
                   onClick={() => {
                     onChange({
                       target: { name: label.toLowerCase(), value: option },
@@ -76,7 +76,7 @@ const CustomDropdown = ({
               ))}
               {onAddNew && searchTerm && (
                 <li
-                  className="cursor-pointer border-t border-gray-100 px-4 py-2 text-blue-600 hover:bg-blue-50"
+                  className="cursor-pointer border-t border-gray-100 px-4 py-2 text-blue-600 hover:bg-blue-50 dark:border-gray-700 dark:text-blue-400 dark:hover:bg-blue-900"
                   onClick={() => {
                     onAddNew(searchTerm);
                     setSearchTerm("");
@@ -190,14 +190,16 @@ const EditForm = ({ task, setEditing }) => {
   };
   console.log(formData.date);
   return (
-    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black/40">
-      <div className="max-h-[70%] w-[90%] max-w-2xl overflow-auto rounded-2xl bg-white p-6 shadow-xl">
+    <div className="bg-opacity-50 fixed inset-0 z-50 flex items-center justify-center bg-black/40 dark:bg-black/70">
+      <div className="max-h-[70%] w-[90%] max-w-2xl overflow-auto rounded-2xl bg-white p-6 shadow-xl dark:bg-gray-900">
         <div className="mb-6 flex items-center justify-between">
-          <h2 className="text-2xl font-bold text-gray-700">Edit Task</h2>
+          <h2 className="text-2xl font-bold text-gray-700 dark:text-gray-100">
+            Edit Task
+          </h2>
           <button
             type="button"
             onClick={() => setEditing(false)}
-            className="text-gray-400 hover:text-gray-600 focus:outline-none"
+            className="text-gray-400 hover:text-gray-600 focus:outline-none dark:text-gray-300 dark:hover:text-gray-100"
           >
             <svg
               className="h-6 w-6"
@@ -217,7 +219,7 @@ const EditForm = ({ task, setEditing }) => {
 
         <form onSubmit={handleSubmit} className="space-y-6">
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-600">
+            <label className="mb-2 block text-sm font-medium text-gray-600 dark:text-gray-300">
               Task Description*
             </label>
             <input
@@ -227,13 +229,15 @@ const EditForm = ({ task, setEditing }) => {
               onChange={handleChange}
               className={`w-full rounded-lg border px-4 py-3 ${
                 errors.text
-                  ? "border-red-300 bg-red-50"
-                  : "border-gray-200 bg-white"
-              } text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none`}
+                  ? "border-red-300 bg-red-50 dark:border-red-400 dark:bg-red-950"
+                  : "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
+              } text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none dark:text-gray-200 dark:focus:border-blue-500`}
               placeholder="What needs to be done?"
             />
             {errors.text && (
-              <p className="mt-1 text-sm text-red-500">{errors.text}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+                {errors.text}
+              </p>
             )}
           </div>
 
@@ -257,7 +261,7 @@ const EditForm = ({ task, setEditing }) => {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-600">
+            <label className="mb-2 block text-sm font-medium text-gray-600 dark:text-gray-300">
               Due Date*
             </label>
             <input
@@ -267,17 +271,19 @@ const EditForm = ({ task, setEditing }) => {
               onChange={handleChange}
               className={`w-full rounded-lg border px-4 py-3 ${
                 errors.date
-                  ? "border-red-300 bg-red-50"
-                  : "border-gray-200 bg-white"
-              } text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none`}
+                  ? "border-red-300 bg-red-50 dark:border-red-400 dark:bg-red-950"
+                  : "border-gray-200 bg-white dark:border-gray-700 dark:bg-gray-800"
+              } text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none dark:text-gray-200 dark:focus:border-blue-500`}
             />
             {errors.date && (
-              <p className="mt-1 text-sm text-red-500">{errors.date}</p>
+              <p className="mt-1 text-sm text-red-500 dark:text-red-400">
+                {errors.date}
+              </p>
             )}
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-600">
+            <label className="mb-2 block text-sm font-medium text-gray-600 dark:text-gray-300">
               Tags
             </label>
             <div className="flex items-center">
@@ -288,13 +294,13 @@ const EditForm = ({ task, setEditing }) => {
                 onKeyDown={(e) =>
                   e.key === "Enter" && (e.preventDefault(), handleAddTag())
                 }
-                className="flex-grow rounded-l-lg border border-gray-200 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none"
+                className="flex-grow rounded-l-lg border border-gray-200 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:focus:border-blue-500"
                 placeholder="Add a tag"
               />
               <button
                 type="button"
                 onClick={handleAddTag}
-                className="rounded-r-lg bg-blue-500 px-5 py-3 text-white shadow-sm transition-colors hover:bg-blue-600 focus:ring focus:ring-blue-100 focus:outline-none"
+                className="rounded-r-lg bg-blue-500 px-5 py-3 text-white shadow-sm transition-colors hover:bg-blue-600 focus:ring focus:ring-blue-100 focus:outline-none dark:bg-blue-700 dark:hover:bg-blue-800"
               >
                 Add
               </button>
@@ -304,13 +310,13 @@ const EditForm = ({ task, setEditing }) => {
               {formData.tags.map((tag) => (
                 <span
                   key={tag}
-                  className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-600"
+                  className="inline-flex items-center rounded-full bg-blue-100 px-3 py-1 text-sm font-medium text-blue-600 dark:bg-blue-900 dark:text-blue-300"
                 >
                   {tag}
                   <button
                     type="button"
                     onClick={() => handleRemoveTag(tag)}
-                    className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full text-blue-500 hover:bg-blue-200 hover:text-blue-700 focus:outline-none"
+                    className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full text-blue-500 hover:bg-blue-200 hover:text-blue-700 focus:outline-none dark:text-blue-300 dark:hover:bg-blue-800 dark:hover:text-blue-100"
                   >
                     &times;
                   </button>
@@ -320,7 +326,7 @@ const EditForm = ({ task, setEditing }) => {
           </div>
 
           <div>
-            <label className="mb-2 block text-sm font-medium text-gray-600">
+            <label className="mb-2 block text-sm font-medium text-gray-600 dark:text-gray-300">
               Partners
             </label>
             <div className="flex items-center">
@@ -331,13 +337,13 @@ const EditForm = ({ task, setEditing }) => {
                 onKeyDown={(e) =>
                   e.key === "Enter" && (e.preventDefault(), handleAddPartner())
                 }
-                className="flex-grow rounded-l-lg border border-gray-200 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none"
+                className="flex-grow rounded-l-lg border border-gray-200 bg-white px-4 py-3 text-gray-700 shadow-sm focus:border-blue-400 focus:ring focus:ring-blue-100 focus:outline-none dark:border-gray-700 dark:bg-gray-800 dark:text-gray-200 dark:focus:border-blue-500"
                 placeholder="Add a partner"
               />
               <button
                 type="button"
                 onClick={handleAddPartner}
-                className="rounded-r-lg bg-purple-500 px-5 py-3 text-white shadow-sm transition-colors hover:bg-purple-600 focus:ring focus:ring-purple-100 focus:outline-none"
+                className="rounded-r-lg bg-purple-500 px-5 py-3 text-white shadow-sm transition-colors hover:bg-purple-600 focus:ring focus:ring-purple-100 focus:outline-none dark:bg-purple-700 dark:hover:bg-purple-800"
               >
                 Add
               </button>
@@ -347,13 +353,13 @@ const EditForm = ({ task, setEditing }) => {
               {formData.partners.map((partner) => (
                 <span
                   key={partner}
-                  className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-600"
+                  className="inline-flex items-center rounded-full bg-purple-100 px-3 py-1 text-sm font-medium text-purple-600 dark:bg-purple-900 dark:text-purple-300"
                 >
                   {partner}
                   <button
                     type="button"
                     onClick={() => handleRemovePartner(partner)}
-                    className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full text-purple-500 hover:bg-purple-200 hover:text-purple-700 focus:outline-none"
+                    className="ml-2 inline-flex h-4 w-4 items-center justify-center rounded-full text-purple-500 hover:bg-purple-200 hover:text-purple-700 focus:outline-none dark:text-purple-300 dark:hover:bg-purple-800 dark:hover:text-purple-100"
                   >
                     &times;
                   </button>
@@ -365,14 +371,14 @@ const EditForm = ({ task, setEditing }) => {
           <div className="flex gap-4 pt-4">
             <button
               type="submit"
-              className="flex-1 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-medium text-white shadow-md transition-all hover:from-blue-600 hover:to-purple-600 hover:shadow-lg focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 focus:outline-none"
+              className="flex-1 rounded-lg bg-gradient-to-r from-blue-500 to-purple-500 px-6 py-3 font-medium text-white shadow-md transition-all hover:from-blue-600 hover:to-purple-600 hover:shadow-lg focus:ring-2 focus:ring-purple-300 focus:ring-offset-2 focus:outline-none dark:from-blue-700 dark:to-purple-700 dark:hover:from-blue-800 dark:hover:to-purple-800"
             >
               Submit{" "}
             </button>
             <button
               type="button"
               onClick={() => setEditing(false)}
-              className="flex-1 rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-700 shadow-md transition-all hover:bg-gray-200 hover:shadow-lg focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:outline-none"
+              className="flex-1 rounded-lg bg-gray-100 px-6 py-3 font-medium text-gray-700 shadow-md transition-all hover:bg-gray-200 hover:shadow-lg focus:ring-2 focus:ring-gray-300 focus:ring-offset-2 focus:outline-none dark:bg-gray-800 dark:text-gray-200 dark:hover:bg-gray-700"
             >
               Cancel
             </button>
