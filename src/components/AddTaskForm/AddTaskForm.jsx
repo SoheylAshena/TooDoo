@@ -1,11 +1,11 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import { addTasks } from "../context/Slices/tasksSlice";
+import { addTasks } from "@/context/Slices/tasksSlice";
 import { FaRegFlag } from "react-icons/fa";
 import { MdClose, MdAdd } from "react-icons/md";
 import { IoIosArrowDown } from "react-icons/io";
-import { closeAddForm } from "../context/Slices/addFormSlice";
+import { closeAddForm } from "@/context/Slices/addFormSlice";
 
 // Extracted suggestion list component
 const SuggestionList = ({

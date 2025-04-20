@@ -6,7 +6,7 @@ import {
   IoClose,
 } from "react-icons/io5";
 import { useDispatch } from "react-redux";
-import { toggleTask } from "../context/Slices/tasksSlice";
+import { toggleTask } from "@/context/Slices/tasksSlice";
 import PropTypes from "prop-types";
 
 // Day Cell component to prevent re-renders of the entire calendar

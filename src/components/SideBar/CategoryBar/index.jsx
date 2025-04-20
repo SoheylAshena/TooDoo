@@ -1,7 +1,7 @@
 import { useDispatch, useSelector } from "react-redux";
 import PropTypes from "prop-types";
-import stringToColor from "../../Utilities/stringToHSL";
-import { setFilters } from "../../context/Slices/filtersSlice";
+import stringToColor from "../../../Utilities/stringToHSL";
+import { setFilters } from "../../../context/Slices/filtersSlice";
 
 const Category = ({ onClose }) => {
   const dispatch = useDispatch();

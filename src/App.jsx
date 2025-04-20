@@ -1,17 +1,13 @@
-import { Provider } from "react-redux";
-import { store } from "./context/store";
-import SideBar from "./components/SideBar/SideBar";
-import MainBody from "./components/MainBody";
-import AddTaskForm from "./components/AddTaskForm";
+import SideBar from '@/components/SideBar';
+import MainView from '@/components/MainView';
+import AddTaskForm from '@/components/AddTaskForm/AddTaskForm';
 function App() {
   return (
-    <Provider store={store}>
-      <div className="mx-auto flex h-screen w-full">
-        <SideBar />
-        <MainBody />
-        <AddTaskForm />
-      </div>
-    </Provider>
+    <main className="mx-auto flex h-screen w-full">
+      <SideBar />
+      <MainView />
+      <AddTaskForm />
+    </main>
   );
 }
 

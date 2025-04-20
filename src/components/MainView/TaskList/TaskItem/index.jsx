@@ -1,14 +1,14 @@
-import { MdDelete, MdEdit, MdExpandMore, MdExpandLess } from "react-icons/md";
-import PropTypes from "prop-types";
-import TagsList from "./TagsList";
-import TaskText from "./TaskText";
-import CategoryLabel from "./CategoryLabel";
-import DateLabel from "./DateLabel";
-import PartnersList from "./PartnersList";
-import { useDispatch } from "react-redux";
-import { deleteTasks, toggleTask } from "../../context/Slices/tasksSlice";
-import { memo, useState } from "react";
-import EditForm from "../EditForm";
+import { MdDelete, MdEdit, MdExpandMore, MdExpandLess } from 'react-icons/md';
+import PropTypes from 'prop-types';
+import TagsList from './TagsList';
+import TaskText from './TaskText';
+import CategoryLabel from './CategoryLabel';
+import DateLabel from './DateLabel';
+import PartnersList from './PartnersList';
+import { useDispatch } from 'react-redux';
+import { deleteTasks, toggleTask } from '@/context/Slices/tasksSlice';
+import { memo, useState } from 'react';
+import EditForm from '@/components/EditForm/EditForm';
 
 const TaskItem = ({ task }) => {
   const dispatch = useDispatch();
@@ -26,8 +26,8 @@ const TaskItem = ({ task }) => {
       <li
         className={`rounded-xl p-4 transition-all duration-300 hover:translate-y-[-3px] ${
           task.completed
-            ? "border border-gray-200 bg-gray-100 shadow-sm dark:border-gray-700 dark:bg-gray-800"
-            : "border border-gray-100 bg-white shadow-md hover:shadow-lg dark:border-gray-800 dark:bg-gray-900"
+            ? 'border border-gray-200 bg-gray-100 shadow-sm dark:border-gray-700 dark:bg-gray-800'
+            : 'border border-gray-100 bg-white shadow-md hover:shadow-lg dark:border-gray-800 dark:bg-gray-900'
         }`}
       >
         <div className="flex items-center gap-3">
@@ -40,12 +40,10 @@ const TaskItem = ({ task }) => {
                 }}
                 className={`mr-3 flex h-5 w-5 items-center justify-center rounded-full border-2 ${
                   task.completed
-                    ? "border-indigo-500 bg-indigo-500 dark:border-indigo-400 dark:bg-indigo-400"
-                    : "border-indigo-300 dark:border-indigo-600"
+                    ? 'border-indigo-500 bg-indigo-500 dark:border-indigo-400 dark:bg-indigo-400'
+                    : 'border-indigo-300 dark:border-indigo-600'
                 } transition-colors duration-200 hover:border-indigo-500 dark:hover:border-indigo-400`}
-                aria-label={
-                  task.completed ? "Mark as incomplete" : "Mark as complete"
-                }
+                aria-label={task.completed ? 'Mark as incomplete' : 'Mark as complete'}
               >
                 {task.completed && (
                   <span className="h-2 w-2 rounded-full bg-white dark:bg-gray-900"></span>
@@ -57,18 +55,18 @@ const TaskItem = ({ task }) => {
                   className="ml-2 h-2 w-2 flex-shrink-0 rounded-full"
                   style={{
                     backgroundColor:
-                      task.priority === "High"
-                        ? "#ef4444"
-                        : task.priority === "Medium"
-                          ? "#f59e0b"
-                          : "#10b981",
+                      task.priority === 'High'
+                        ? '#ef4444'
+                        : task.priority === 'Medium'
+                          ? '#f59e0b'
+                          : '#10b981',
                   }}
                 ></div>
               </div>
               <button
                 onClick={toggleDetails}
                 className="ml-2 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
-                aria-label={showDetails ? "Hide details" : "Show details"}
+                aria-label={showDetails ? 'Hide details' : 'Show details'}
               >
                 {showDetails ? (
                   <MdExpandLess className="text-gray-500" />
@@ -120,7 +118,7 @@ const TaskItem = ({ task }) => {
   );
 };
 
-TaskItem.displayName = "TaskItem";
+TaskItem.displayName = 'TaskItem';
 
 TaskItem.propTypes = {
   task: PropTypes.shape({

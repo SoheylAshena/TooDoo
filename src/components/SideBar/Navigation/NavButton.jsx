@@ -1,5 +1,6 @@
-import PropTypes from "prop-types";
-import clsx from "clsx";
+import PropTypes from 'prop-types';
+import clsx from 'clsx';
+
 const NavButton = ({ icon, text, onClick }) => {
   return (
     <li
@@ -8,10 +9,10 @@ const NavButton = ({ icon, text, onClick }) => {
     >
       <div
         className={clsx(
-          "flex items-center gap-3",
-          text === "Add Task"
-            ? "text-xl text-indigo-600 dark:text-indigo-400"
-            : "text-gray-500 dark:text-gray-400",
+          'flex items-center gap-3',
+          text === 'Add Task'
+            ? 'text-xl text-indigo-600 dark:text-indigo-400'
+            : 'text-gray-500 dark:text-gray-400',
         )}
       >
         <span>{icon}</span>
@@ -21,7 +22,7 @@ const NavButton = ({ icon, text, onClick }) => {
   );
 };
 
-NavButton.displayName = "NavButton";
+NavButton.displayName = 'NavButton';
 
 NavButton.propTypes = {
   icon: PropTypes.node.isRequired,

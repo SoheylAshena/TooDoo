@@ -1,6 +1,6 @@
 import { useState, useRef } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { updateTask } from "../context/Slices/tasksSlice";
+import { updateTask } from "@/context/Slices/tasksSlice";
 import PropTypes from "prop-types";
 
 const CustomDropdown = ({

@@ -1,11 +1,11 @@
-import { useDispatch } from "react-redux";
-import { BsArrowDown, BsArrowUp, BsSearch } from "react-icons/bs";
-import { MdOutlinePriorityHigh } from "react-icons/md";
-import { setFilters } from "../context/Slices/filtersSlice";
-import clsx from "clsx";
-import { useState } from "react";
-import { useSelector } from "react-redux";
-import { checkAndSyncCurrent } from "../context/Slices/CurrentSlice";
+import { useDispatch } from 'react-redux';
+import { BsArrowDown, BsArrowUp, BsSearch } from 'react-icons/bs';
+import { MdOutlinePriorityHigh } from 'react-icons/md';
+import { setFilters } from '@/context/Slices/filtersSlice';
+import clsx from 'clsx';
+import { useState } from 'react';
+import { useSelector } from 'react-redux';
+import { checkAndSyncCurrent } from '@/context/Slices/CurrentSlice';
 
 const FilterPanel = () => {
   const dispatch = useDispatch();
@@ -21,21 +21,21 @@ const FilterPanel = () => {
     dispatch(checkAndSyncCurrent());
   };
 
-  const categories = ["all", ...new Set(tasks.map((task) => task.category))];
+  const categories = ['all', ...new Set(tasks.map((task) => task.category))];
 
   // Status options
   const statusOptions = [
-    { value: "all", label: "All" },
-    { value: "active", label: "Active" },
-    { value: "completed", label: "Completed" },
+    { value: 'all', label: 'All' },
+    { value: 'active', label: 'Active' },
+    { value: 'completed', label: 'Completed' },
   ];
 
   // Priority options
   const priorityOptions = [
-    { value: "all", label: "All Priorities" },
-    { value: "high", label: "High" },
-    { value: "medium", label: "Medium" },
-    { value: "low", label: "Low" },
+    { value: 'all', label: 'All Priorities' },
+    { value: 'high', label: 'High' },
+    { value: 'medium', label: 'Medium' },
+    { value: 'low', label: 'Low' },
   ];
 
   return (
@@ -49,9 +49,7 @@ const FilterPanel = () => {
           <input
             type="text"
             value={filterOptions.search}
-            onChange={(e) =>
-              updateFilters({ ...filterOptions, search: e.target.value })
-            }
+            onChange={(e) => updateFilters({ ...filterOptions, search: e.target.value })}
             placeholder="Search tasks..."
             className="w-full rounded-lg border-none bg-gray-50 py-2 pr-3 pl-10 text-sm transition-colors focus:bg-white focus:ring-1 focus:ring-indigo-500 focus:outline-none dark:bg-gray-800 dark:text-gray-400 dark:focus:bg-gray-700"
           />
@@ -68,12 +66,11 @@ const FilterPanel = () => {
               onClick={() => setStatusOpen(!statusOpen)}
             >
               <span className="text-gray-700 dark:text-gray-300">
-                {statusOptions.find(
-                  (option) => option.value === filterOptions.status,
-                )?.label || "All"}
+                {statusOptions.find((option) => option.value === filterOptions.status)?.label ||
+                  'All'}
               </span>
               <svg
-                className={`h-4 w-4 text-gray-500 transition-transform ${statusOpen ? "rotate-180" : ""} dark:text-gray-400`}
+                className={`h-4 w-4 text-gray-500 transition-transform ${statusOpen ? 'rotate-180' : ''} dark:text-gray-400`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -93,9 +90,9 @@ const FilterPanel = () => {
                   <div
                     key={option.value}
                     className={clsx(
-                      "cursor-pointer px-4 py-2 text-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-800",
+                      'cursor-pointer px-4 py-2 text-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-800',
                       filterOptions.status === option.value &&
-                        "bg-indigo-50 text-indigo-700 dark:bg-gray-800 dark:text-indigo-500",
+                        'bg-indigo-50 text-indigo-700 dark:bg-gray-800 dark:text-indigo-500',
                     )}
                     onClick={() => {
                       updateFilters({ ...filterOptions, status: option.value });
@@ -119,12 +116,10 @@ const FilterPanel = () => {
               onClick={() => setCategoryOpen(!categoryOpen)}
             >
               <span className="text-gray-700 dark:text-gray-300">
-                {filterOptions.category === "all"
-                  ? "All Categories"
-                  : filterOptions.category}
+                {filterOptions.category === 'all' ? 'All Categories' : filterOptions.category}
               </span>
               <svg
-                className={`h-4 w-4 text-gray-500 transition-transform ${categoryOpen ? "rotate-180" : ""} dark:text-gray-400`}
+                className={`h-4 w-4 text-gray-500 transition-transform ${categoryOpen ? 'rotate-180' : ''} dark:text-gray-400`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -144,9 +139,9 @@ const FilterPanel = () => {
                   <div
                     key={category}
                     className={clsx(
-                      "cursor-pointer px-4 py-2 text-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-800",
+                      'cursor-pointer px-4 py-2 text-sm transition-colors hover:bg-gray-50 dark:hover:bg-gray-800',
                       filterOptions.category === category &&
-                        "bg-indigo-50 text-indigo-700 dark:bg-gray-800 dark:text-indigo-500",
+                        'bg-indigo-50 text-indigo-700 dark:bg-gray-800 dark:text-indigo-500',
                     )}
                     onClick={() => {
                       updateFilters({
@@ -156,7 +151,7 @@ const FilterPanel = () => {
                       setCategoryOpen(false);
                     }}
                   >
-                    {category === "all" ? "All Categories" : category}
+                    {category === 'all' ? 'All Categories' : category}
                   </div>
                 ))}
               </div>
@@ -173,12 +168,11 @@ const FilterPanel = () => {
               onClick={() => setPriorityOpen(!priorityOpen)}
             >
               <span className="text-gray-700 dark:text-gray-300">
-                {priorityOptions.find(
-                  (option) => option.value === filterOptions.priority,
-                )?.label || "All Priorities"}
+                {priorityOptions.find((option) => option.value === filterOptions.priority)?.label ||
+                  'All Priorities'}
               </span>
               <svg
-                className={`h-4 w-4 text-gray-500 transition-transform ${priorityOpen ? "rotate-180" : ""} dark:text-gray-400`}
+                className={`h-4 w-4 text-gray-500 transition-transform ${priorityOpen ? 'rotate-180' : ''} dark:text-gray-400`}
                 viewBox="0 0 24 24"
                 fill="none"
                 stroke="currentColor"
@@ -198,9 +192,9 @@ const FilterPanel = () => {
                   <div
                     key={option.value}
                     className={clsx(
-                      "cursor-pointer px-4 py-2 text-sm transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800",
+                      'cursor-pointer px-4 py-2 text-sm transition-colors hover:bg-gray-50 dark:text-gray-400 dark:hover:bg-gray-800',
                       filterOptions.priority === option.value &&
-                        "bg-indigo-50 text-indigo-700 dark:bg-gray-800 dark:text-indigo-500",
+                        'bg-indigo-50 text-indigo-700 dark:bg-gray-800 dark:text-indigo-500',
                     )}
                     onClick={() => {
                       updateFilters({
@@ -225,42 +219,36 @@ const FilterPanel = () => {
           </label>
           <div className="inline-flex rounded-lg bg-gray-100 p-1 dark:bg-gray-800">
             <button
-              onClick={() =>
-                updateFilters({ ...filterOptions, sort: "date-desc" })
-              }
+              onClick={() => updateFilters({ ...filterOptions, sort: 'date-desc' })}
               className={clsx(
-                "flex items-center rounded-md px-3 py-1.5 text-xs font-medium transition-all",
-                filterOptions.sort === "date-desc"
-                  ? "bg-white text-indigo-600 shadow-sm dark:bg-gray-700 dark:text-indigo-400"
-                  : "text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300",
+                'flex items-center rounded-md px-3 py-1.5 text-xs font-medium transition-all',
+                filterOptions.sort === 'date-desc'
+                  ? 'bg-white text-indigo-600 shadow-sm dark:bg-gray-700 dark:text-indigo-400'
+                  : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300',
               )}
             >
               <BsArrowDown className="mr-1.5" />
               Newest
             </button>
             <button
-              onClick={() =>
-                updateFilters({ ...filterOptions, sort: "date-asc" })
-              }
+              onClick={() => updateFilters({ ...filterOptions, sort: 'date-asc' })}
               className={clsx(
-                "flex items-center rounded-md px-3 py-1.5 text-xs font-medium transition-all",
-                filterOptions.sort === "date-asc"
-                  ? "bg-white text-indigo-600 shadow-sm dark:bg-gray-700 dark:text-indigo-400"
-                  : "text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300",
+                'flex items-center rounded-md px-3 py-1.5 text-xs font-medium transition-all',
+                filterOptions.sort === 'date-asc'
+                  ? 'bg-white text-indigo-600 shadow-sm dark:bg-gray-700 dark:text-indigo-400'
+                  : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300',
               )}
             >
               <BsArrowUp className="mr-1.5" />
               Oldest
             </button>
             <button
-              onClick={() =>
-                updateFilters({ ...filterOptions, sort: "priority" })
-              }
+              onClick={() => updateFilters({ ...filterOptions, sort: 'priority' })}
               className={clsx(
-                "flex items-center rounded-md px-3 py-1.5 text-xs font-medium transition-all",
-                filterOptions.sort === "priority"
-                  ? "bg-white text-indigo-600 shadow-sm dark:bg-gray-700 dark:text-indigo-400"
-                  : "text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300",
+                'flex items-center rounded-md px-3 py-1.5 text-xs font-medium transition-all',
+                filterOptions.sort === 'priority'
+                  ? 'bg-white text-indigo-600 shadow-sm dark:bg-gray-700 dark:text-indigo-400'
+                  : 'text-gray-600 hover:text-gray-800 dark:text-gray-400 dark:hover:text-gray-300',
               )}
             >
               <MdOutlinePriorityHigh className="mr-1.5" />

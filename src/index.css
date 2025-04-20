@@ -1,21 +1,21 @@
-@import "tailwindcss";
+@import 'tailwindcss';
 
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --primary-color: theme("colors.indigo.600");
-  --primary-dark: theme("colors.indigo.800");
-  --primary-light: theme("colors.indigo.400");
-  --bg-gradient-start: theme("colors.indigo.500");
-  --bg-gradient-end: theme("colors.purple.600");
+  --primary-color: theme('colors.indigo.600');
+  --primary-dark: theme('colors.indigo.800');
+  --primary-light: theme('colors.indigo.400');
+  --bg-gradient-start: theme('colors.indigo.500');
+  --bg-gradient-end: theme('colors.purple.600');
 }
 
 .dark {
-  --primary-color: theme("colors.indigo.500");
-  --primary-dark: theme("colors.indigo.700");
-  --primary-light: theme("colors.indigo.300");
-  --bg-gradient-start: theme("colors.indigo.900");
-  --bg-gradient-end: theme("colors.purple.900");
+  --primary-color: theme('colors.indigo.500');
+  --primary-dark: theme('colors.indigo.700');
+  --primary-light: theme('colors.indigo.300');
+  --bg-gradient-start: theme('colors.indigo.900');
+  --bg-gradient-end: theme('colors.purple.900');
 }
 
 /* Default sidebar behavior */
