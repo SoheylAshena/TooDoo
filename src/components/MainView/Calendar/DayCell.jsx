@@ -1,52 +1,53 @@
-import PropTypes from 'prop-types';
 import { memo } from 'react';
+import PropTypes from 'prop-types';
 
-// Day Cell component to prevent re-renders of the entire calendar
-const DayCell = memo(({ day, tasks, currentDate, onDayClick }) => {
-  if (day === null) {
-    return <div className="min-h-[120px] bg-gray-50 p-2 opacity-50 dark:bg-gray-800" />;
+const DayCell = ({ day, tasks, onDayClick, currentDate }) => {
+  if (!day) {
+    return <div className="h-24 bg-white p-2 dark:bg-gray-800" />;
   }
 
-  const dayDate = new Date(currentDate.getFullYear(), currentDate.getMonth(), day);
-  const isToday = new Date().toDateString() === dayDate.toDateString();
+  const isToday =
+    new Date().getDate() === day &&
+    new Date().getMonth() === currentDate.getMonth() &&
+    new Date().getFullYear() === currentDate.getFullYear();
 
   return (
-    <div
+    <button
       onClick={() => onDayClick(day, tasks)}
-      className={`min-h-[120px] cursor-pointer p-2 transition-all duration-200 hover:bg-indigo-50 dark:hover:bg-indigo-950 ${
-        isToday ? 'bg-indigo-100 dark:bg-indigo-900' : 'bg-white dark:bg-gray-900'
+      className={`relative h-24 w-full bg-white p-2 text-left transition-colors hover:bg-gray-50 dark:bg-gray-800 dark:hover:bg-gray-700 ${
+        isToday ? 'bg-blue-50 dark:bg-blue-900/30' : ''
       }`}
     >
-      <div className={`mb-2 flex justify-end ${isToday ? 'font-bold' : 'font-medium'}`}>
-        <span
-          className={`flex h-7 w-7 items-center justify-center rounded-full ${
-            isToday ? 'bg-indigo-600 text-white' : 'text-gray-700 dark:text-gray-300'
-          }`}
-        >
-          {day}
-        </span>
-      </div>
-
-      {/* Tasks preview - only show up to 3 */}
-      <div className="scrollbar-none max-h-[80px] space-y-1.5 overflow-hidden">
-        {tasks && tasks.length > 0 && (
-          <div className="text-center text-xs font-medium text-indigo-600 dark:text-indigo-400">
-            {tasks.length} Tasks
-          </div>
-        )}
-      </div>
-    </div>
+      <span
+        className={`text-sm font-medium ${
+          isToday ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
+        }`}
+      >
+        {day}
+      </span>
+      {tasks.length > 0 && (
+        <div className="mt-1 space-y-1 overflow-hidden">
+          {tasks.slice(0, 2).map((task) => (
+            <div key={task.id} className="truncate text-xs text-gray-600 dark:text-gray-400">
+              • {task.text}
+            </div>
+          ))}
+          {tasks.length > 2 && <div className="text-xs text-gray-500 dark:text-gray-400">+{tasks.length - 2} more</div>}
+        </div>
+      )}
+    </button>
   );
-});
-
-DayCell.displayName = 'DayCell';
+};
 
 DayCell.propTypes = {
   day: PropTypes.number,
   tasks: PropTypes.array,
   currentDate: PropTypes.instanceOf(Date),
-  dispatch: PropTypes.func.isRequired,
   onDayClick: PropTypes.func.isRequired,
 };
 
-export default DayCell;
+DayCell.defaultProps = {
+  tasks: [],
+};
+
+export default memo(DayCell);

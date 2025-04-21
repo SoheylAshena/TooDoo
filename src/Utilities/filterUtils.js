@@ -1,104 +1,104 @@
 export const getFilterConfig = (item) => {
   switch (item) {
-    case "all":
+    case 'all':
       return {
-        category: "all",
-        status: "all",
-        search: "",
-        priority: "all",
-        time: "all",
+        category: 'all',
+        status: 'all',
+        search: '',
+        priority: 'all',
+        time: 'all',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
-    case "completed":
+    case 'completed':
       return {
-        category: "all",
-        status: "completed",
-        search: "",
-        priority: "all",
-        time: "all",
+        category: 'all',
+        status: 'completed',
+        search: '',
+        priority: 'all',
+        time: 'all',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
-    case "high":
+    case 'high':
       return {
-        category: "all",
-        status: "all",
-        search: "",
-        priority: "high",
-        time: "all",
+        category: 'all',
+        status: 'all',
+        search: '',
+        priority: 'high',
+        time: 'all',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
-    case "today":
+    case 'today':
       return {
-        category: "all",
-        status: "all",
-        search: "",
-        priority: "all",
-        time: "today",
+        category: 'all',
+        status: 'all',
+        search: '',
+        priority: 'all',
+        time: 'today',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
-    case "upcoming":
+    case 'upcoming':
       return {
-        category: "all",
-        status: "all",
-        search: "",
-        priority: "all",
-        time: "upcoming",
+        category: 'all',
+        status: 'all',
+        search: '',
+        priority: 'all',
+        time: 'upcoming',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
-    case "recent":
+    case 'recent':
       return {
-        category: "all",
-        status: "all",
-        search: "",
-        priority: "all",
-        time: "recent",
+        category: 'all',
+        status: 'all',
+        search: '',
+        priority: 'all',
+        time: 'recent',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
-    case "active":
+    case 'active':
       return {
-        category: "all",
-        status: "active",
-        search: "",
-        priority: "all",
-        time: "all",
+        category: 'all',
+        status: 'active',
+        search: '',
+        priority: 'all',
+        time: 'all',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
-    case "calendar":
+    case 'calendar':
       return {
-        category: "calendar",
-        status: "all",
-        search: "",
-        priority: "all",
-        time: "all",
+        category: 'calendar',
+        status: 'all',
+        search: '',
+        priority: 'all',
+        time: 'all',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
 
     default:
       return {
-        category: "all",
-        status: "all",
-        search: "",
-        priority: "all",
-        time: "all",
+        category: 'all',
+        status: 'all',
+        search: '',
+        priority: 'all',
+        time: 'all',
         tags: [],
         partners: [],
-        sort: "date-desc",
+        sort: 'date-desc',
       };
   }
 };

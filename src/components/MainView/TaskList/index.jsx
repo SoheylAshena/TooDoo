@@ -5,6 +5,7 @@ import useFilteredTasks from '@/hooks/useFilteredTasks';
 
 const TaskList = () => {
   const filteredTasks = useFilteredTasks();
+
   return (
     <>
       <Header />

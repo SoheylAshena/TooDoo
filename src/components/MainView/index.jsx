@@ -5,11 +5,7 @@ import Calendar from '@/components/MainView/Calendar';
 const MainView = () => {
   const currentView = useSelector((state) => state.current);
 
-  return (
-    <section className={styles.mainView}>
-      {currentView === 'calendar' ? <Calendar /> : <TaskList />}
-    </section>
-  );
+  return <section className={styles.mainView}>{currentView === 'calendar' ? <Calendar /> : <TaskList />}</section>;
 };
 
 export default MainView;
