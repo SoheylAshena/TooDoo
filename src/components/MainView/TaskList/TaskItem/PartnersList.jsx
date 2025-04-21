@@ -1,4 +1,4 @@
-import PropTypes from "prop-types";
+import PropTypes from 'prop-types';
 
 const PartnersList = ({ partners }) => {
   if (!partners || partners.length === 0) return null;
@@ -17,7 +17,7 @@ const PartnersList = ({ partners }) => {
   );
 };
 
-PartnersList.displayName = "PartnersList";
+PartnersList.displayName = 'PartnersList';
 
 PartnersList.propTypes = {
   partners: PropTypes.array,
