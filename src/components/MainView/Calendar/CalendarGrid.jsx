@@ -3,9 +3,11 @@ import DayCell from './DayCell';
 import WeekDaysHeader from './WeekDaysHeader';
 import useCalendarSelection from '@/hooks/Calendar/useCalendarSelection';
 import TaskDetailsModal from './TaskDetailModal';
-import PropTypes from 'prop-types';
+import { useContext } from 'react';
+import CurrentDateContext from '@/context/CurrentDateContext';
 
-const CalendarGrid = ({ currentDate }) => {
+const CalendarGrid = () => {
+  const { currentDate } = useContext(CurrentDateContext);
   const dayCells = useDayCells(currentDate);
   const { selectedDay, dayTasks, handleDayClick, closeModal } = useCalendarSelection();
 
@@ -29,10 +31,6 @@ const CalendarGrid = ({ currentDate }) => {
       )}
     </>
   );
-};
-
-CalendarGrid.propTypes = {
-  currentDate: PropTypes.instanceOf(Date).isRequired,
 };
 
 export default CalendarGrid;

@@ -1,8 +1,9 @@
-import { memo } from 'react';
-import PropTypes from 'prop-types';
+import { memo, useContext } from 'react';
 import useCalendarNavigation from '@/hooks/Calendar/useCalendarNavigation';
+import CurrentDateContext from '@/context/CurrentDateContext';
 
-const CalendarHeader = ({ currentDate, setCurrentDate }) => {
+const CalendarHeader = () => {
+  const { currentDate, setCurrentDate } = useContext(CurrentDateContext);
   const { goToPreviousMonth, goToNextMonth } = useCalendarNavigation(setCurrentDate);
 
   const monthYear = currentDate.toLocaleDateString('en-US', {
@@ -35,11 +36,6 @@ const CalendarHeader = ({ currentDate, setCurrentDate }) => {
       </div>
     </div>
   );
-};
-
-CalendarHeader.propTypes = {
-  currentDate: PropTypes.instanceOf(Date).isRequired,
-  setCurrentDate: PropTypes.func.isRequired,
 };
 
 export default memo(CalendarHeader);

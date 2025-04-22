@@ -19,7 +19,7 @@ const DayCell = ({ day, tasks, onDayClick, currentDate }) => {
       }`}
     >
       <span
-        className={`text-sm font-medium ${
+        className={`absolute top-1 left-1 text-sm font-medium ${
           isToday ? 'text-blue-600 dark:text-blue-400' : 'text-gray-700 dark:text-gray-300'
         }`}
       >
@@ -44,10 +44,6 @@ DayCell.propTypes = {
   tasks: PropTypes.array,
   currentDate: PropTypes.instanceOf(Date),
   onDayClick: PropTypes.func.isRequired,
-};
-
-DayCell.defaultProps = {
-  tasks: [],
 };
 
 export default memo(DayCell);
