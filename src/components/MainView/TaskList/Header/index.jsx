@@ -11,7 +11,7 @@ const Header = () => {
         <h2 className={styles.headerText}>Tasks Manager</h2>
         <button onClick={toggleFilters} className={styles.filterButton}>
           <BsFilter className={styles.filterIcon} />
-          Filters & Sort
+          Filter & Sort
         </button>
       </div>
 

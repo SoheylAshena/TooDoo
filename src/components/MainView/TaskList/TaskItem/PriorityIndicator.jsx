@@ -3,10 +3,9 @@ import PropTypes from 'prop-types';
 const PriorityIndicator = ({ priority }) => {
   return (
     <div
-      className="ml-2 h-2 w-2 flex-shrink-0 rounded-full"
+      className="ml-2 h-2 w-2 rounded-full"
       style={{
-        backgroundColor:
-          priority === 'High' ? '#ef4444' : priority === 'Medium' ? '#f59e0b' : '#10b981',
+        backgroundColor: priority === 'High' ? '#ef4444' : priority === 'Medium' ? '#f59e0b' : '#10b981',
       }}
     ></div>
   );

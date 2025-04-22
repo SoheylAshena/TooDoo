@@ -11,7 +11,7 @@ const TaskDetails = ({ category, date, partners, tags, id, setEditing }) => {
   const dispatch = useDispatch();
 
   return (
-    <div className="mt-3 w-full border-t border-gray-100 pt-3 dark:border-gray-800">
+    <section className="mt-3 w-full border-t border-gray-100 pt-3 dark:border-gray-800">
       <div className="flex flex-wrap items-center gap-2.5 text-xs text-gray-500 dark:text-gray-400">
         <CategoryLabel category={category} />
         <DateLabel date={date} />
@@ -43,7 +43,7 @@ const TaskDetails = ({ category, date, partners, tags, id, setEditing }) => {
           <MdEdit className="text-lg" />
         </button>
       </div>
-    </div>
+    </section>
   );
 };
 

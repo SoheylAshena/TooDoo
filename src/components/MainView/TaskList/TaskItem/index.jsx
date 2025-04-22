@@ -20,16 +20,17 @@ const TaskItem = ({ task }) => {
 
       <li
         className={clsx(
-          'flex items-center rounded-xl p-4 transition-all duration-300 hover:translate-y-[-3px]',
-          task.completed
-            ? 'border border-gray-200 bg-gray-100 shadow-sm dark:border-gray-700 dark:bg-gray-800'
-            : 'border border-gray-100 bg-white shadow-md hover:shadow-lg dark:border-gray-800 dark:bg-gray-900',
+          'rounded-xl p-4 shadow-sm transition-all duration-300',
+          task.completed ? 'bg-gray-100 dark:bg-gray-700' : 'bg-white dark:bg-gray-800',
         )}
       >
-        <ToggleTaskButton id={task.id} completed={task.completed} />
-        <TaskText text={task.text} completed={task.completed} />
-        <PriorityIndicator priority={task.priority} />
-        <ShowMoreButton onClick={toggleDetails} showDetails={showDetails} />
+        <section className="flex items-center">
+          <ToggleTaskButton id={task.id} completed={task.completed} />
+          <TaskText text={task.text} completed={task.completed} />
+          <PriorityIndicator priority={task.priority} />
+          <ShowMoreButton onClick={toggleDetails} showDetails={showDetails} />
+        </section>
+
         {showDetails && (
           <TaskDetails
             category={task.category}

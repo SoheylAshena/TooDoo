@@ -8,11 +8,7 @@ const ShowMoreButton = ({ onClick, showDetails }) => {
       className="ml-2 rounded-full p-1 hover:bg-gray-100 dark:hover:bg-gray-700"
       aria-label={showDetails ? 'Hide details' : 'Show details'}
     >
-      {showDetails ? (
-        <MdExpandLess className="text-gray-500" />
-      ) : (
-        <MdExpandMore className="text-gray-500" />
-      )}
+      {showDetails ? <MdExpandLess className="text-gray-500" /> : <MdExpandMore className="text-gray-500" />}
     </button>
   );
 };
